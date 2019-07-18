@@ -1,5 +1,5 @@
 port = 50
-print(f"Mock BT by Socket Test {port}")
+print("Mock BT by Socket Test "+port)
 print("=========================")
 
 import uuid
