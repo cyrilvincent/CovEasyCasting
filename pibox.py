@@ -1,15 +1,16 @@
 import threading
 import bluetooth
 import uuid
-import time
 from typing import List, Tuple
 
 class BTDevice:
 
-    def __init__(self, mac="", port=0, isConnected = False):
+    def __init__(self, mac="00:00:00:00:00:00", port=0, isConnected = False):
         self.mac = mac
         self.port = port
         self.isConnected = isConnected
+        self.isDialog = False
+        self.isDown = False
 
     def __repr__(self):
         return f"{self.mac}[{self.port}]"
@@ -17,41 +18,47 @@ class BTDevice:
 class BTClient(threading.Thread):
 
     def __init__(self, device:BTDevice, cb):
+        super().__init__()
         self.device = device
-        self.stop = False
         self.sock:bluetooth.BluetoothSocket = None
         self.cb = cb
         self.data = 0
 
     def connect(self):
         print(f"Connecting to {self.device}")
-        self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        self.sock.connect((self.device.mac, self.device.port))
-        print(f"Connected to {self.device}")
-        self.device.isConnected = True
+        try:
+            self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+            self.sock.connect((self.device.mac, self.device.port))
+            self.device.isDown = False
+            print(f"Connected to {self.device}")
+            self.device.isConnected = True
+        except IOError:
+            self.device.isDown = True
+            print(f"{self.device} is Down")
 
     def run(self) -> None:
-        while(not self.stop):
+        self.device.isDialog = True
+        while(self.device.isDialog):
             try:
                 self.data = self.sock.recv(1024)
                 print(f"{self.device}->{self.data}")
                 self.cb(self.device, self.data)
             except IOError:
                 self.device.isConnected = False
-                self.stop = True
+                self.device.isDialog = False
         try:
             self.sock.close()
         except:
             pass
 
     def stop(self):
-        self.stop = True
+        self.device.isDialog = False
 
     def close(self):
         try:
-            self.sock.close()
-            self.stop = False
+            self.device.isDialog = False
             self.device.isConnected = False
+            self.sock.close()
         except:
             pass
 
@@ -75,22 +82,20 @@ class BTServer:
         :param port: port of the server
         :param service: name of the service
         """
-        self.devices = BTDevices
-        self.device = BTDevice(self.getMac(), port)
-        self.deviceClients:List[BTClient] = []
+        self.device:BTDevice= BTDevice(self.getMac(), port)
+        self.deviceClients:List[BTClient] = [BTClient(d, self.receiveEvent) for d in BTDevices]
         self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
-        self.sock = None
         self.service = service
         self.mainClient:BTDevice = BTDevice()
+        self.port = port
 
     def receiveEvent(self, device:BTDevice, data):
         print(f"PiBox Received {device}->{data}")
-        if self.mainClient.isClientConnected:
+        if self.mainClient.isConnected:
             try:
                 json = self.makeJson()
-                self.sock.send(json)
+                self.device.sock.send(json)
                 print(f"Sending {json}")
-                self.nbIOError = 0
             except IOError as ex:
                 print(f"IOError {ex}")
                 self.listen()
@@ -101,15 +106,26 @@ class BTServer:
         json += "w:" + self.deviceClients[2].data + "}"
         return json
 
-    def startClients(self):
-        for device in self.devices:
-            client = BTClient(device)
+    def connectClient(self, num):
+        self.deviceClients[num].connect()
+
+    def connectClients(self):
+        for client in self.deviceClients:
             client.connect()
-            self.deviceClients.append(client)
+
+    def dialogClient(self, num):
+        self.deviceClients[num].start()
+
+    def dialogClients(self):
+        for client in self.deviceClients:
+            client.start()
 
     def stopClients(self):
         for client in self.deviceClients:
             client.stop()
+
+    def stopClient(self, num):
+        self.deviceClients[num].stop()
 
     def stopForceClient(self):
         self.stopClients()
@@ -121,27 +137,32 @@ class BTServer:
         mac = ':'.join(("%012X" % mac)[i:i + 2] for i in range(0, 12, 2))
         return mac
 
-    def createServer(self):
+    def createServer(self, nbClient = 1):
         print(f"Starting server {self.device}")
-        self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        self.sock.bind(("", self.port))
-        self.sock.listen(1) # One connection at a time
-        print("Server {self.device} Ok")
-        bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS],
+        self.device.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        self.device.sock.bind(("", self.port))
+        self.device.sock.listen(nbClient)
+        print(f"Server {self.device} Ok")
+        bluetooth.advertise_service(self.device.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS],
                                     [bluetooth.SERIAL_PORT_PROFILE])
         print(f"Service {self.service} Ok")
 
     def listen(self):
-        self.isClientConnected = False
+        self.mainClient.isConnected = False
         print("Waiting for connection...")
-        clientSock, clientInfo = self.sock.accept()
-        print(f"Accepted connection from {clientInfo}")
-        self.mainClient = BTDevice(clientInfo, 0, True)
+        clientSock, clientInfo = self.device.sock.accept()
+        self.mainClient.mac = clientInfo
+        self.mainClient.isConnected = True
+        self.mainClient.isDialog = True
+        print(f"Accepted connection from {self.mainClient}")
+        json = self.makeJson()
+        self.device.sock.send(json)
+        print(f"Sending {json}")
 
     def stop(self):
         self.stopClients()
         try:
-            self.sock.close()
+            self.device.close()
         except:
             pass
 
@@ -155,7 +176,7 @@ class BTServer:
         self.stop()
 
     def __repr__(self):
-        return f"BTServer {self.mainClient}<->{self.device}<-{self.devices}"
+        return f"BTServer {self.mainClient}<->{self.device}<-{self.deviceClients}"
 
 
 if __name__ == '__main__':
@@ -165,7 +186,9 @@ if __name__ == '__main__':
         BTDevice("C8:14:51:08:8F:3A", 1),
     ))
     print(server)
-    server.startClients()
+    server.connectClients()
+    print(server)
+    server.dialogClients()
     print(server)
     server.createServer()
     print(server)
