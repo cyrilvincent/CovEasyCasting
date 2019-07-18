@@ -8,7 +8,7 @@ services = bluetooth.find_service(address=mac)
 print(services)
 for s in services:
     print(s["name"])
-service = services[-5] # [s for s in services if "SMS/MMS" in s["name"]]
+service = services[-4] # [s for s in services if "SMS/MMS" in s["name"]]
 print(service)
 print(f"Connecting to {service['name']}")
 sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)

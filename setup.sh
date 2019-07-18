@@ -1,5 +1,4 @@
 pip install pybluez
-pip install pybluez[ble]
 
 #Win10
 pip install PyBluez-win10

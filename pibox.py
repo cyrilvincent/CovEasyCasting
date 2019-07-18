@@ -1,63 +1,63 @@
 import threading
 import bluetooth
 import uuid
+import time
+
 from typing import List, Tuple
 
 class BTDevice:
 
-    def __init__(self, mac="00:00:00:00:00:00", port=0, isConnected = False):
+    def __init__(self, mac="00:00:00:00:00:00", port=0):
         self.mac = mac
         self.port = port
-        self.isConnected = isConnected
-        self.isDialog = False
-        self.isDown = False
 
     def __repr__(self):
         return f"{self.mac}[{self.port}]"
 
 class BTClient(threading.Thread):
 
-    def __init__(self, device:BTDevice, cb):
+    def __init__(self, id:int, device:BTDevice, cb = lambda device, data : 0):
         super().__init__()
+        self.id = id
         self.device = device
         self.sock:bluetooth.BluetoothSocket = None
+        self.data = -1
         self.cb = cb
-        self.data = 0
+        self.status = 0 # 0 = Not connected, 1 = Connected, 2 = Dialog, -1 = Down, -2 = Disconnected
 
     def connect(self):
         print(f"Connecting to {self.device}")
         try:
             self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
             self.sock.connect((self.device.mac, self.device.port))
-            self.device.isDown = False
             print(f"Connected to {self.device}")
-            self.device.isConnected = True
+            self.status = 1
         except IOError:
-            self.device.isDown = True
+            self.status = -1
             print(f"{self.device} is Down")
 
     def run(self) -> None:
-        self.device.isDialog = True
-        while(self.device.isDialog):
+        if self.status == 1:
+            self.status = 2
+        while(self.status > 1):
             try:
                 self.data = self.sock.recv(1024)
                 print(f"{self.device}->{self.data}")
                 self.cb(self.device, self.data)
             except IOError:
-                self.device.isConnected = False
-                self.device.isDialog = False
+                self.status = -2
         try:
+            self.status = 0
             self.sock.close()
         except:
             pass
 
     def stop(self):
-        self.device.isDialog = False
+        self.status = 1
 
     def close(self):
         try:
-            self.device.isDialog = False
-            self.device.isConnected = False
+            self.status = 0
             self.sock.close()
         except:
             pass
@@ -72,7 +72,7 @@ class BTClient(threading.Thread):
         self.close()
 
     def __repr__(self):
-        return f"BTClient {self.device}->{self.device.isConnected}"
+        return f"BTClient{self.id}({self.status}){self.device}"
 
 class BTServer:
 
@@ -83,28 +83,42 @@ class BTServer:
         :param service: name of the service
         """
         self.device:BTDevice= BTDevice(self.getMac(), port)
-        self.deviceClients:List[BTClient] = [BTClient(d, self.receiveEvent) for d in BTDevices]
+        self.deviceClients:List[BTClient] = [BTClient(i + 1, d) for i, d in enumerate(BTDevices)]
         self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
         self.service = service
-        self.mainClient:BTDevice = BTDevice()
-        self.port = port
+        self.mainClient:BTClient = BTClient(0, BTDevice())
 
-    def receiveEvent(self, device:BTDevice, data):
+    def _receiveEvent(self, device:BTDevice, data):
         print(f"PiBox Received {device}->{data}")
-        if self.mainClient.isConnected:
+        if self.mainClient.status > 0:
             try:
                 json = self.makeJson()
                 self.device.sock.send(json)
                 print(f"Sending {json}")
             except IOError as ex:
-                print(f"IOError {ex}")
-                self.listen()
+                pass
+
+    def emit(self):
+        while True:
+            try:
+                json = self.makeJson()
+                self.device.sock.send(json)
+                print(f"Sending {json}")
+                self.mainClient.status = 2
+            except IOError as ex:
+                self.mainClient.status = -2
 
     def makeJson(self):
-        json = "{t:" + self.deviceClients[0].data + ","
-        json += "p:" + self.deviceClients[1].data + ","
-        json += "w:" + self.deviceClients[2].data + "}"
+        json = "{t:" + self._getData(self.deviceClients[1]) + ","
+        json += "p:" + self._getData(self.deviceClients[2]) + ","
+        json += "w:" + self._getData(self.deviceClients[3]) + "}"
         return json
+
+    def _getData(self,device):
+        if device.status < 0:
+            return device.status
+        else:
+            return device.data
 
     def connectClient(self, num):
         self.deviceClients[num].connect()
@@ -140,7 +154,7 @@ class BTServer:
     def createServer(self, nbClient = 1):
         print(f"Starting server {self.device}")
         self.device.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        self.device.sock.bind(("", self.port))
+        self.device.sock.bind(("", self.device.port))
         self.device.sock.listen(nbClient)
         print(f"Server {self.device} Ok")
         bluetooth.advertise_service(self.device.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS],
@@ -148,16 +162,17 @@ class BTServer:
         print(f"Service {self.service} Ok")
 
     def listen(self):
-        self.mainClient.isConnected = False
+        self.mainClient.status = 0
         print("Waiting for connection...")
         clientSock, clientInfo = self.device.sock.accept()
         self.mainClient.mac = clientInfo
-        self.mainClient.isConnected = True
-        self.mainClient.isDialog = True
+        self.mainClient.status = 1
         print(f"Accepted connection from {self.mainClient}")
         json = self.makeJson()
         self.device.sock.send(json)
         print(f"Sending {json}")
+        self.mainClient.status = 2
+        self.emit()
 
     def stop(self):
         self.stopClients()
@@ -176,24 +191,28 @@ class BTServer:
         self.stop()
 
     def __repr__(self):
-        return f"BTServer {self.mainClient}<->{self.device}<-{self.deviceClients}"
+        return f"BTServer {self.mainClient}<-{self.device}<-{self.deviceClients}"
 
 
 if __name__ == '__main__':
     server = BTServer((
-        BTDevice("C8:14:51:08:8F:3A", 1),
-        BTDevice("C8:14:51:08:8F:3A", 1),
-        BTDevice("C8:14:51:08:8F:3A", 1),
+        BTDevice("C8:14:51:08:8F:3A", 4),
+        BTDevice("C8:14:51:08:8F:00", 1),
+        BTDevice("C8:14:51:08:8F:00", 2),
     ))
     print(server)
+    print("Connecting to devices")
     server.connectClients()
     print(server)
+    print("Dialog to devices")
     server.dialogClients()
     print(server)
+    print("Create BT server")
     server.createServer()
     print(server)
+    print("Listening")
     server.listen()
-    # Gérer toutes les pannes en boucle infinies
+    print("Stop")
 
 
 
