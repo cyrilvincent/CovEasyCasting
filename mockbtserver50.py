@@ -14,6 +14,7 @@ sock.bind(("",port))
 sock.listen(1)
 uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 bluetooth.advertise_service(sock, "MockBTServer50",uuid,[uuid, bluetooth.SERIAL_PORT_CLASS],[bluetooth.SERIAL_PORT_PROFILE])
+# si bug https://www.raspberrypi.org/forums/viewtopic.php?t=132470
 
 print("Waiting for connection...")
 clientSock, clientInfo = sock.accept()

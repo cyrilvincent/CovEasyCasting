@@ -3,34 +3,25 @@ import bluetooth
 import uuid
 import time
 
+from abstractpibox import *
 from typing import List, Tuple
 
-# Obsolete remplacé par btpibox
-class BTDevice:
+"""
+Etudier bluez543
+D:\CVC\Covestro\EasyCasting\bluez-5.43\test\example-gatt-*
+Sur Raspbian : https://scribles.net/running-ble-gatt-server-example-on-raspbian-stretch/#Step01
 
-    def __init__(self, mac="00:00:00:00:00:00", port=0):
-        self.mac = mac
-        self.port = port
+"""
+class LTEClient(AbstractClient):
 
-    def __repr__(self):
-        return f"{self.mac}[{self.port}]"
-
-class BTClient(threading.Thread):
-
-    def __init__(self, id:int, device:BTDevice, cb = lambda device, data : 0):
-        super().__init__()
-        self.id = id
-        self.device = device
-        self.sock:bluetooth.BluetoothSocket = None
-        self.data = -1
-        self.cb = cb
-        self.status = 0 # 0 = Not connected, 1 = Connected, 2 = Dialog, -1 = Down, -2 = Disconnected
+    def __init__(self, id:int, device:Device, cb = lambda device, data : 0):
+        super().__init__(id,device,cb)
 
     def connect(self):
         print(f"Connecting to {self.device}")
         try:
             self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-            self.sock.connect((self.device.mac, self.device.port))
+            self.sock.connect((self.device.id, self.device.port))
             print(f"Connected to {self.device}")
             self.status = 1
         except IOError:
@@ -53,9 +44,6 @@ class BTClient(threading.Thread):
         except:
             pass
 
-    def stop(self):
-        self.status = 1
-
     def close(self):
         try:
             self.status = 0
@@ -63,34 +51,25 @@ class BTClient(threading.Thread):
         except:
             pass
 
-    def __enter__(self):
-        self.connect()
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-    def __del__(self):
-        self.close()
-
     def __repr__(self):
-        return f"BTClient{self.id}({self.status}){self.device}"
+        return "BTClient"+str(self.id)+"("+str(self.status)+")"+str(self.device)
 
-class BTServer:
+class BTServer(AbstractServer):
 
-    def __init__(self, BTDevices:Tuple[BTDevice], port=72, service = "EasyCastingBox"):
+    def __init__(self, devices:Tuple[Device], port=72, service = "EasyCastingBox"):
         """
         :param BTDevices: item 1 = temperature, item 2 = preasure, item 3 = weight
         :param port: port of the server
         :param service: name of the service
         """
-        self.device:BTDevice= BTDevice(self.getMac(), port)
-        self.clients:List[BTClient] = [BTClient(i + 1, d) for i, d in enumerate(BTDevices)]
+        self.device:Device= Device(self.getMac(), port)
+        self.clients:List[BTClient] = [BTClient(i + 1, d) for i, d in enumerate(devices)]
         self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
         self.service = service
-        self.mainClient:BTClient = BTClient(0, BTDevice())
+        self.mainClient:BTClient = BTClient(0, Device())
         self.sock:bluetooth.BluetoothSocket = None
 
-    def _receiveEvent(self, device:BTDevice, data):
+    def _receiveEvent(self, device:Device, data):
         print(f"PiBox Received {device}->{data}")
         if self.mainClient.status > 0:
             try:
@@ -110,18 +89,6 @@ class BTServer:
             except IOError as ex:
                 self.mainClient.status = -2
             time.sleep(1)
-
-    def makeJson(self):
-        json = "{t:" + self._getData(self.clients[1]) + ","
-        json += "p:" + self._getData(self.clients[2]) + ","
-        json += "w:" + self._getData(self.clients[3]) + "}"
-        return json
-
-    def _getData(self,device):
-        if device.status < 0:
-            return device.status
-        else:
-            return device.data
 
     def connectClient(self, num):
         self.clients[num].connect()
@@ -148,11 +115,6 @@ class BTServer:
         self.stopClients()
         for client in self.clients:
             del client
-
-    def getMac(self):
-        mac = uuid.getnode()
-        mac = ':'.join(("%012X" % mac)[i:i + 2] for i in range(0, 12, 2))
-        return mac
 
     def createServer(self, nbClient = 1):
         print(f"Starting server {self.device}")
@@ -185,24 +147,15 @@ class BTServer:
         except:
             pass
 
-    def __del__(self):
-        self.stop()
-
-    def __enter__(self):
-        self.createServer()
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.stop()
-
     def __repr__(self):
-        return f"BTServer {self.mainClient}<-{self.device}<-{self.clients}"
+        return "BTServer "+str(self.mainClient)+"<-"+str(self.device)+"<-"+str(self.clients)
 
 
 if __name__ == '__main__':
     server = BTServer((
-        BTDevice("C8:14:51:08:8F:3A", 4),
-        BTDevice("C8:14:51:08:8F:00", 1),
-        BTDevice("C8:14:51:08:8F:00", 2),
+        Device("C8:14:51:08:8F:3A", 4),
+        Device("C8:14:51:08:8F:00", 1),
+        Device("C8:14:51:08:8F:00", 2),
     ))
     print(server)
     print("Connecting to devices")
