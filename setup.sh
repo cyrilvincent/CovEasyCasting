@@ -1,7 +1,8 @@
-pip install pybluez
-
 #Win10
-pip install PyBluez-win10
+#pip install PyBluez-win10
+
+sudo apt-get update
+
 
 #D'après https://github.com/pybluez/pybluez/wiki/Installation-on-Raspberry-Pi-3
 sudo apt-get install libbluetooth-dev python-dev libglib2.0-dev libboost-python-dev libboost-thread-dev
