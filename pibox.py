@@ -83,7 +83,7 @@ class BTServer:
         :param service: name of the service
         """
         self.device:BTDevice= BTDevice(self.getMac(), port)
-        self.deviceClients:List[BTClient] = [BTClient(i + 1, d) for i, d in enumerate(BTDevices)]
+        self.clients:List[BTClient] = [BTClient(i + 1, d) for i, d in enumerate(BTDevices)]
         self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
         self.service = service
         self.mainClient:BTClient = BTClient(0, BTDevice())
@@ -107,11 +107,12 @@ class BTServer:
                 self.mainClient.status = 2
             except IOError as ex:
                 self.mainClient.status = -2
+            time.sleep(1)
 
     def makeJson(self):
-        json = "{t:" + self._getData(self.deviceClients[1]) + ","
-        json += "p:" + self._getData(self.deviceClients[2]) + ","
-        json += "w:" + self._getData(self.deviceClients[3]) + "}"
+        json = "{t:" + self._getData(self.clients[1]) + ","
+        json += "p:" + self._getData(self.clients[2]) + ","
+        json += "w:" + self._getData(self.clients[3]) + "}"
         return json
 
     def _getData(self,device):
@@ -121,29 +122,29 @@ class BTServer:
             return device.data
 
     def connectClient(self, num):
-        self.deviceClients[num].connect()
+        self.clients[num].connect()
 
     def connectClients(self):
-        for client in self.deviceClients:
+        for client in self.clients:
             client.connect()
 
     def dialogClient(self, num):
-        self.deviceClients[num].start()
+        self.clients[num].start()
 
     def dialogClients(self):
-        for client in self.deviceClients:
+        for client in self.clients:
             client.start()
 
     def stopClients(self):
-        for client in self.deviceClients:
+        for client in self.clients:
             client.stop()
 
     def stopClient(self, num):
-        self.deviceClients[num].stop()
+        self.clients[num].stop()
 
     def stopForceClient(self):
         self.stopClients()
-        for client in self.deviceClients:
+        for client in self.clients:
             del client
 
     def getMac(self):
@@ -191,7 +192,7 @@ class BTServer:
         self.stop()
 
     def __repr__(self):
-        return f"BTServer {self.mainClient}<-{self.device}<-{self.deviceClients}"
+        return f"BTServer {self.mainClient}<-{self.device}<-{self.clients}"
 
 
 if __name__ == '__main__':
