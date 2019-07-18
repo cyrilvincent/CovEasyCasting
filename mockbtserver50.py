@@ -1,12 +1,12 @@
 port = 50
-print(f"Mock BT Test {port}")
+print("Mock BT Test "+str(port))
 print("===============")
 # netstat to see all binding port
 
 import uuid
 mac = uuid.getnode()
 mac = ':'.join(("%012X" % mac)[i:i+2] for i in range(0, 12, 2))
-print(f"Starting BT Server {mac}[{port}]...")
+print("Starting BT Server "+mac+" "+str(port)+"...")
 
 import bluetooth
 sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -17,7 +17,7 @@ bluetooth.advertise_service(sock, "MockBTServer50",uuid,[uuid, bluetooth.SERIAL_
 
 print("Waiting for connection...")
 clientSock, clientInfo = sock.accept()
-print(f"Accepted connection from {clientInfo}")
+print("Accepted connection from "+clientInfo)
 import time
 try:
     i = 1
@@ -26,7 +26,7 @@ try:
         i += 1
         time.sleep(1)
 except IOError as ex:
-    print(f"Error: {ex}")
+    print("Error: "+str(ex))
 
 clientSock.close()
 sock.close()
