@@ -9,14 +9,8 @@
             namespace = '/pibox';
             var socket = io(namespace);
             socket.on('connect', function() {
-                //socket.emit('my_event', {data: 'I\'m connected!'});
+                socket.emit('heartbeat');
                 socket.emit('start');
-            });
-            socket.on('my_response', function(msg, cb) {
-                console.log("my_response")
-                $('#log').append('<br>' + $('<div/>').text('Received #' + msg.data).html());
-                if (cb)
-                    cb();
             });
             socket.on('response', function(msg, cb) {
                 console.log("my_response")

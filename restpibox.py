@@ -17,7 +17,7 @@ class RestServer(WifiServer):
         while self.mainClient.status == 2:
             try:
                 json = self.makeJson()
-                io.emit("response",json)
+                io.emit("response",json,broadcast=True)
             except IOError as ex:
                 self.mainClient.status = -2
             time.sleep(2)
@@ -59,11 +59,10 @@ def rest():
 def test():
     return flask.render_template('websocket.html')
 
-@socketio.on('my_event', namespace='/pibox')
-def test_message(message):
-    import time
-    for i in range(100):
-        io.emit('my_response',{'data': i})
+@socketio.on('heartbeat', namespace='/pibox')
+def test_message():
+    for i in range(10):
+        io.emit('response',"ok")
         time.sleep(1)
 
 @socketio.on("start", namespace="/pibox")
