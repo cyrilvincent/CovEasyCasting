@@ -3,7 +3,7 @@ import bluetooth
 import uuid
 import time
 
-from abstractpibox import *
+from genericpibox import *
 from typing import List, Tuple
 
 """

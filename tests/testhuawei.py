@@ -8,7 +8,7 @@ services = bluetooth.find_service(address=mac)
 services = [s for s in services if s["protocol"]=="RFCOMM"]
 print(services)
 for s in services:
-    print(s["name"])
+    print((s["name"],s["port"]))
 service = [s for s in services if "BTSPPServer" in str(s["name"])][0]
 print(service)
 print(f"Connecting to {service}")

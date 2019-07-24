@@ -1,11 +1,11 @@
 import unittest
 import time
-from pibox import *
+from btpibox import *
 
 class PiBoxTest(unittest.TestCase):
 
     def testBTClient(self):
-        c = BTClient(0, BTDevice("C8:14:51:08:8F:3A", 4))
+        c = BTClient(0, Device("C8:14:51:08:8F:3A", 4))
         c.connect()
         self.assertEqual(1, c.status)
         c.start()
@@ -15,9 +15,9 @@ class PiBoxTest(unittest.TestCase):
 
     def testBTServerClients(self):
         server = BTServer((
-            BTDevice("C8:14:51:08:8F:3A", 4),
-            BTDevice("C8:14:51:08:8F:00", 1),
-            BTDevice("C8:14:51:08:8F:00", 2),
+            Device("C8:14:51:08:8F:3A", 4),
+            Device("C8:14:51:08:8F:00", 1),
+            Device("C8:14:51:08:8F:00", 2),
         ))
         server.connectClients()
         self.assertEqual(1, server.clients[0].status)

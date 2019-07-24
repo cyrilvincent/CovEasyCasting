@@ -1,7 +1,3 @@
-De bonnes idées
-https://www.alex-design.fr/Projets-R-A/Douche-connectee/Connection-bluetooth-entre-Arduino-et-Raspberry-Pi-3
-Il s'agit de sous traiter la connection à linux ce qui simplifie enormement le code client
-
 https://www.teachmemicro.com/arduino-bluetooth/
 Bien prendre un hc05 et un uno et DHT11
 https://www.aranacorp.com/fr/votre-arduino-communique-avec-le-module-hc-05/

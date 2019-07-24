@@ -1,17 +1,20 @@
 import threading
 import abc
 import uuid
+import json
 
 from typing import List, Tuple
 
+
 class Device:
 
-    def __init__(self, id="00:00:00:00:00:00", port=0):
+    def __init__(self, id="00:00:00:00:00:00", port=0, name=None):
         self.id = id
         self.port = port
+        self.name = name
 
     def __repr__(self):
-        return f"{self.id}[{self.port}]"
+        return str(self.id)+"["+str(self.port)+"]"
 
 class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
 
@@ -22,7 +25,7 @@ class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
         self.sock = None
         self.data = 0.0
         self.cb = cb
-        self.status = 0 # 0 = Not connected, 1 = Connected, 2 = Dialog, -1 = Down, -2 = Disconnected
+        self.status = -2 # -2 = Not connected, -3 = Disconnected, -4 = Down, -1 = Connected, 0 = Dialog
 
     @abc.abstractmethod
     def connect(self):...
@@ -31,10 +34,14 @@ class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
     def run(self) -> None:...
 
     def stop(self):
-        self.status = 1
+        self.status = -1
 
-    @abc.abstractmethod
-    def close(self):...
+    def close(self):
+        try:
+            self.sock.close()
+            self.status = min(self.status, 0)
+        except:
+            pass
 
     def __enter__(self):
         self.connect()
@@ -51,10 +58,13 @@ class AbstractServer(metaclass=abc.ABCMeta):
     def emit(self):...
 
     def makeJson(self):
-        json = "{t:" + str(self._getData(self.clients[0])) + ","
-        json += "p:" + str(self._getData(self.clients[1])) + ","
-        json += "w:" + str(self._getData(self.clients[2])) + "}"
-        return json
+        d = {}
+        d["phone"] = self._getData(self.clients[0])
+        d["temp"] = self._getData(self.clients[1])
+        d["preasure"] = self._getData(self.clients[2])
+        d["weight"] = self._getData(self.clients[3])
+        d["mix"] = self._getData(self.clients[4])
+        return json.dumps(d)
 
     def _getData(self,device):
         if device.status < 0:
