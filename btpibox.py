@@ -61,12 +61,13 @@ class BTClient(SerialClient):
 
 class BTServer(AbstractServer, BTClient):
 
-    def __init__(self, devices:Tuple[Device], port=72, service = "EasyCastingBox"):
+    def __init__(self, clients:Tuple[AbstractClient], port=72, service = "EasyCastingBox"):
         BTClient.__init__(self, 0, Device(self.getMac(), port))
-        self.clients:List[BTClient] = [BTClient(i, d) for i, d in enumerate(devices)]
+        self.clients = clients
         self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
         self.service = service
         self.sock:bluetooth.BluetoothSocket = None
+        SerialClient.closeAllSerials()
 
     def emit(self):
         while True:

@@ -2,17 +2,19 @@ from wifipibox import *
 from typing import Tuple
 import flask
 import flask_socketio as io
+import config
 
 class RestServer(WifiServer):
 
-    def __init__(self, devices:Tuple[Device], app, port):
-        super().__init__(devices,"localhost","/")
+    def __init__(self, clients:Tuple[AbstractClient], app, port):
+        super().__init__(clients,"localhost","/")
         self.device.id = self.getIp()
         self.device.port = port
         self.app = app
 
     def emit(self):
         print("Emiting")
+        self.status = 0
         while self.status == 0:
             try:
                 json = self.makeJson()
@@ -37,12 +39,12 @@ app = flask.Flask(__name__)
 socketio = io.SocketIO(app, async_mode=None)
 
 server = RestServer((
-    Device("C8:14:51:08:8F:3A", 5),
-    Device("C8:14:51:08:8F:3A", 5),
-    Device("C8:14:51:08:8F:3A", 4),
-    Device("C8:14:51:08:8F:00", 2),
-    Device("C8:14:51:08:8F:3A", 5),
-), socketio, 80)
+        BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
+        BTClient(1, Device("C8:14:51:08:8F:00", 1)),
+        BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
+        SerialClient(3, Device(config.weightSerial)),
+        BTClient(4, Device("C8:14:51:08:8F:00", 5)),
+    ), socketio, 80)
 print(server)
 print("Dialog to devices")
 server.dialogClients()

@@ -1,5 +1,6 @@
 import serial
 import time
+import serial.tools.list_ports as ls
 
 from genericpibox import *
 
@@ -47,10 +48,22 @@ class SerialClient(AbstractClient):
         except:
             pass
 
+    @staticmethod
+    def closeAllSerials():
+        l = [p.device for p in ls.comports()]
+        for d in l:
+            try:
+                serial.Serial(d)
+                serial.close()
+            except:
+                pass
+
+
     def __repr__(self):
         return "SerialClient"+str(self.id)+"("+str(self.status)+")"+str(self.device)
 
 if __name__ == '__main__':
+    SerialClient.closeAllSerials()
     c = SerialClient(0, Device("COM2"))
     c.connect()
     c.run()

@@ -28,11 +28,11 @@ class ConsoleServer(BTServer):
 
 if __name__ == '__main__':
     server = ConsoleServer((
-        Device(config.phoneMac, name=config.phoneBTName),
-        Device("C8:14:51:08:8F:00", 1),
-        Device("C8:14:51:08:8F:00", 0),
-        Device(config.weightMac, name=config.weightBTName),
-        Device("C8:14:51:08:8F:00", 5),
+        BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
+        BTClient(1, Device("C8:14:51:08:8F:00", 1)),
+        BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
+        SerialClient(3, Device(config.weightSerial)),
+        BTClient(4, Device("C8:14:51:08:8F:00", 5)),
     ))
     print(server)
     print("Dialog to devices")
