@@ -1,6 +1,7 @@
 import serial
 import time
 import serial.tools.list_ports as ls
+import sys
 
 from genericpibox import *
 
@@ -20,7 +21,7 @@ class SerialClient(AbstractClient):
             print(f"{self.device} is Down")
 
     def run(self) -> None:
-        while(True):
+        while(not self.isStop):
             if self.status < -1:
                 self.connect()
             while(self.status >= -1):
@@ -36,6 +37,8 @@ class SerialClient(AbstractClient):
                     pass
                 except IOError:
                     self.status = -3
+                except :
+                    pass
             try:
                 self.sock.close()
                 self.status = min(-2, self.status)
@@ -62,7 +65,7 @@ class SerialClient(AbstractClient):
 
 
     def __repr__(self):
-        return "SerialClient"+str(self.id)+"("+str(self.status)+")"+str(self.device)
+        return "SerialClient"+str(self.id)+str(self.device)
 
 if __name__ == '__main__':
     SerialClient.closeAllSerials()

@@ -29,7 +29,7 @@ class ConsoleServer(BTServer):
 if __name__ == '__main__':
     server = ConsoleServer((
         BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
-        BTClient(1, Device("C8:14:51:08:8F:00", 1)),
+        BTClient(1, Device(config.tempMac, config.tempPort)),
         BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
         SerialClient(3, Device(config.weightSerial)),
         SerialClient(4, Device(config.mixSerial), timeout=3600),

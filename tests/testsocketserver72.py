@@ -1,4 +1,4 @@
-port = 50
+port = 72
 print("Mock BT by Socket Test "+str(port))
 print("=========================")
 

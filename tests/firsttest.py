@@ -4,6 +4,7 @@ print("==================")
 print("Testing Python libraries...")
 import bluetooth
 import config
+import serial
 from btpibox import *
 
 # print("Connecting to temperature device...")
@@ -12,23 +13,23 @@ from btpibox import *
 # client.connect()
 # client.close()
 
-# print("Connecting to preasure device...")
-# device = Device(config.preasureMac, config.preasurePort)
-# client = BTClient(2,device)
-# client.connect()
-# client.close()
-
-print("Connecting to weight device...")
-device = Device(config.weightMac, name = config.weightBTName)
-client = BTClient(3,device)
+print("Connecting to preasure device...")
+device = Device(config.preasureMac, name = config.preasureBTName)
+client = BTClient(2,device)
 client.connect()
 client.close()
 
-# print("Connecting to mix device...")
-# device = Device(config.mixMac, config.mixPort)
-# client = BTClient(4,device)
-# client.connect()
-# client.close()
+print("Connecting to weight device...")
+device = Device(config.weightSerial)
+client = SerialClient(3,device)
+client.connect()
+client.close()
+
+print("Connecting to mix device...")
+device = Device(config.mixSerial)
+client = BTClient(4,device)
+client.connect()
+client.close()
 
 print("Connecting to phone device...")
 device = Device(config.phoneMac, name = config.phoneBTName)
@@ -36,5 +37,5 @@ client = BTClient(0,device)
 client.connect()
 client.close()
 
-print("All devices are OK start consolepibox.py to test the Server")
+print("All connections to devices are OK start unittestspibox.py to test communications and consolepibox.py to test the Server")
 

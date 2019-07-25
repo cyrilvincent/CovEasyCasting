@@ -1,5 +1,10 @@
+print("Start as admin")
+print("Closing...")
 import serial
-sock = serial.Serial("COM1")
-sock.close()
-sock = serial.Serial("COM2")
-sock.close()
+import serial.tools.list_ports as ls
+l = ls.comports()
+for p in l:
+    print("Closing "+p.device)
+    sock = serial.Serial(p.device)
+    sock.close()
+print("OK")

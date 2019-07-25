@@ -4,6 +4,7 @@ import uuid
 import time
 import json
 import serial
+import sys
 
 from genericpibox import *
 from serialpibox import *
@@ -33,11 +34,12 @@ class BTClient(SerialClient):
             service = [s for s in services if self.device.name in str(s["name"])][0]
             self.device.port = int(service["port"])
         except:
+            print("Can't find "+self.device.name)
             self.status = -4
 
 
     def run(self) -> None:
-        while(True):
+        while(not self.isStop):
             if self.status < -1:
                 self.connect()
             while(self.status >= -1):
@@ -59,7 +61,7 @@ class BTClient(SerialClient):
             time.sleep(10)
 
     def __repr__(self):
-        return "BTClient"+str(self.id)+"("+str(self.status)+")"+str(self.device)
+        return "BTClient"+str(self.id)+str(self.device)
 
 class BTServer(AbstractServer, BTClient):
 
@@ -151,6 +153,7 @@ class BTServer(AbstractServer, BTClient):
             print(str(data) + "->"+str(self.clients[-1].device))
             sock.write((str(data)+"\n").encode())
             self.clients[-1].data = 0
+            #time.sleep(0.5)
             #sock.close()
             #sock.open()
         except IOError:
@@ -163,12 +166,13 @@ class BTServer(AbstractServer, BTClient):
 
 if __name__ == '__main__':
     server = BTServer((
-        Device("C8:14:51:08:8F:3A", 5),
-        Device("C8:14:51:08:8F:3A", 5),
-        Device("C8:14:51:08:8F:3A", 4),
-        Device("C8:14:51:08:8F:00", 2),
-        Device("C8:14:51:08:8F:3A", 5),
+        BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
+        BTClient(1, Device(config.tempMac, config.tempPort)),
+        BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
+        SerialClient(3, Device(config.weightSerial)),
+        SerialClient(4, Device(config.mixSerial), timeout=3600),
     ))
+    server.clients[0].cb = server.phoneEvent
     print(server)
     print("Dialog to devices")
     server.dialogClients()
