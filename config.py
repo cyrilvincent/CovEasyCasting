@@ -1,11 +1,11 @@
 phoneMac = "C8:14:51:08:8F:3A"
 phoneBTName = "BTSPPServer"
-tempMac = "C8:14:51:08:8F:3A"
-tempPort = 5
+tempMac = "C8:14:51:08:8F:00"
+tempPort = 0
 preasureMac = "C8:14:51:08:8F:3A"
-preasurePort = 0
 preasureBTName = "SMS/MMS"
 weightSerial = "COM1"
-mixMac = "C8:14:51:08:8F:3A"
-mixPort = 5
+mixSerial = "COM3"
+timeOutData = 60
+
 

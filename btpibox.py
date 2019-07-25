@@ -2,6 +2,8 @@ import threading
 import bluetooth
 import uuid
 import time
+import json
+import serial
 
 from genericpibox import *
 from serialpibox import *
@@ -9,8 +11,8 @@ from typing import List, Tuple
 
 class BTClient(SerialClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0):
-        super().__init__(id,device,cb)
+    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(id,device,cb,timeout)
 
     def connect(self):
         print(f"Connecting to {self.device}")
@@ -139,6 +141,21 @@ class BTServer(AbstractServer, BTClient):
             self.status = -2
         except:
             pass
+
+    def phoneEvent(self, device, data):
+        try:
+            data = int(data)
+            sock:serial.Serial = self.clients[-1].sock
+            #sock.close()
+            #sock.open()
+            print(str(data) + "->"+str(self.clients[-1].device))
+            sock.write((str(data)+"\n").encode())
+            self.clients[-1].data = 0
+            #sock.close()
+            #sock.open()
+        except IOError:
+            self.clients[-1].status = -4
+            print(f"{self.clients[-1].device} is Down")
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])

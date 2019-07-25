@@ -6,8 +6,8 @@ from genericpibox import *
 
 class SerialClient(AbstractClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0):
-        super().__init__(id,device,cb)
+    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(id,device,cb,timeout)
 
     def connect(self):
         print(f"Connecting to {self.device}")
@@ -30,6 +30,8 @@ class SerialClient(AbstractClient):
                     print(str(self.device)+"->"+str(data))
                     self.data = float(data)
                     self.cb(self.device, self.data)
+                except TypeError:
+                    self.data = 0
                 except ValueError:
                     pass
                 except IOError:

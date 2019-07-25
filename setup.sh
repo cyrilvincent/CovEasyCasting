@@ -6,13 +6,14 @@ sudo apt-get install xrdp
 
 #http://www.knight-of-pi.org/installing-python3-6-on-a-raspberry-pi/
 sudo apt-get install python3-dev libffi-dev libssl-dev -y
-wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-tar xJf Python-3.6.3.tar.xz
+wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz
+tar xvf Python-3.6.3.tgz
 cd Python-3.6.3
-./configure
-make
-sudo make install
-sudo pip3 install --upgrade pip
+./configure --enable-optimizations --enable-shared
+make -j8
+sudo make altinstall
+python3.6 -V
+sudo python3.6 -m pip install --upgrade pip
 
 #D'après https://github.com/pybluez/pybluez/wiki/Installation-on-Raspberry-Pi-3
 #Peut être changer 35 par 36 et pip3 par python3.6 -m pip

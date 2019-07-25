@@ -2,6 +2,8 @@ import threading
 import abc
 import uuid
 import json
+import datetime
+import config
 
 from typing import List, Tuple
 
@@ -18,14 +20,31 @@ class Device:
 
 class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0):
+    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
         super().__init__()
         self.id = id
         self.device = device
         self.sock = None
-        self.data = 0.0
+        self._data = 0.0
+        self.datetime = datetime.datetime.now()
         self.cb = cb
         self.status = -2 # -2 = Not connected, -3 = Disconnected, -4 = Down, -1 = Connected, 0 = Dialog
+        self.timeout = timeout
+
+    @property
+    def data(self):
+        if self._data > 0:
+            dt = datetime.datetime.now()
+            s = (dt - self.datetime).total_seconds()
+            if s > self.timeout:
+                print("Timeout:"+str(self))
+                self._data = 0
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = value
+        self.datetime = datetime.datetime.now()
 
     @abc.abstractmethod
     def connect(self):...
