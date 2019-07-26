@@ -28,13 +28,7 @@ class ConsoleServer(BTServer):
 
 
 if __name__ == '__main__':
-    server = ConsoleServer((
-        BTClient(0, Device(config.phoneId, config.phonePort)),
-        FileClient(1, Device(config.tempId, config.tempPort)),
-        BTClient(2, Device(config.preasureId, config.preasurePort)),
-        SerialClient(3, Device(config.weightId)),
-        SerialClient(4, Device(config.mixId), timeout=3600),
-    ))
+    server = ConsoleServer(eval(config.defaultConfig))
     server.clients[0].cb = server.phoneEvent
     print(server)
     print("Dialog to devices")
