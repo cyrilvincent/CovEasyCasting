@@ -1,5 +1,6 @@
 from btpibox import *
-from typing import List, Tuple
+from filepibox import *
+from typing import Tuple
 import config
 
 class ConsoleServer(BTServer):
@@ -28,11 +29,11 @@ class ConsoleServer(BTServer):
 
 if __name__ == '__main__':
     server = ConsoleServer((
-        BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
-        BTClient(1, Device(config.tempMac, config.tempPort)),
-        BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
-        SerialClient(3, Device(config.weightSerial)),
-        SerialClient(4, Device(config.mixSerial), timeout=3600),
+        BTClient(0, Device(config.phoneId, config.phonePort)),
+        FileClient(1, Device(config.tempId, config.tempPort)),
+        BTClient(2, Device(config.preasureId, config.preasurePort)),
+        SerialClient(3, Device(config.weightId)),
+        SerialClient(4, Device(config.mixId), timeout=3600),
     ))
     server.clients[0].cb = server.phoneEvent
     print(server)

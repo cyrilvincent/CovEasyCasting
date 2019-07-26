@@ -18,7 +18,7 @@ class BTClient(SerialClient):
     def connect(self):
         print(f"Connecting to {self.device}")
         try:
-            if self.device.port == 0:
+            if isinstance(self.device.port, str):
                 self.findPort()
             self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
             self.sock.connect((self.device.id, self.device.port))
@@ -27,14 +27,17 @@ class BTClient(SerialClient):
         except IOError:
             self.status = -4
             print(f"{self.device} is Down")
+        except TypeError:
+            pass
 
     def findPort(self):
         try:
             services = bluetooth.find_service(address=self.device.id)
-            service = [s for s in services if self.device.name in str(s["name"])][0]
+            service = [s for s in services if self.device.port in str(s["name"])][0]
+            print("Change port "+self.device.port+" to "+str(service["port"]))
             self.device.port = int(service["port"])
         except:
-            print("Can't find "+self.device.name)
+            print("Can't find "+self.device.port)
             self.status = -4
 
 
@@ -166,11 +169,11 @@ class BTServer(AbstractServer, BTClient):
 
 if __name__ == '__main__':
     server = BTServer((
-        BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
-        BTClient(1, Device(config.tempMac, config.tempPort)),
-        BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
-        SerialClient(3, Device(config.weightSerial)),
-        SerialClient(4, Device(config.mixSerial), timeout=3600),
+        BTClient(0, Device(config.phoneId, name=config.phoneBTName)),
+        BTClient(1, Device(config.tempId, config.tempPort)),
+        BTClient(2, Device(config.preasureId, name=config.preasureBTName)),
+        SerialClient(3, Device(config.weightId)),
+        SerialClient(4, Device(config.mixId), timeout=3600),
     ))
     server.clients[0].cb = server.phoneEvent
     print(server)

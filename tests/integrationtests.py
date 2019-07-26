@@ -8,7 +8,7 @@ import os
 class PiBoxTest(unittest.TestCase):
 
     def testTemperature(self):
-        client = BTClient(1, Device(config.tempMac, config.tempMac))
+        client = BTClient(1, Device(config.tempId, config.tempId))
         client.connect()
         self.assertEqual(-1, client.status)
         client.start()
@@ -17,7 +17,7 @@ class PiBoxTest(unittest.TestCase):
         client.close()
 
     def testPreasure(self):
-        client = BTClient(2, Device(config.preasureMac, name=config.preasureBTName))
+        client = BTClient(2, Device(config.preasureId, name=config.preasureBTName))
         client.connect()
         self.assertEqual(-1, client.status)
         client.start()
@@ -27,7 +27,7 @@ class PiBoxTest(unittest.TestCase):
 
     def testWeight(self):
         SerialClient.closeAllSerials()
-        client = SerialClient(3, Device(config.weightSerial))
+        client = SerialClient(3, Device(config.weightId))
         client.connect()
         self.assertEqual(-1, client.status)
         client.start()
@@ -37,7 +37,7 @@ class PiBoxTest(unittest.TestCase):
 
     def testWeightMock(self):
         SerialClient.closeAllSerials()
-        client = SerialClient(3, Device(config.weightSerial))
+        client = SerialClient(3, Device(config.weightId))
         client.connect()
         self.assertEqual(-1, client.status)
         client.start()
@@ -48,7 +48,7 @@ class PiBoxTest(unittest.TestCase):
         client.close()
 
     def testMix(self):
-        client = SerialClient(3, Device(config.mixSerial))
+        client = SerialClient(3, Device(config.mixId))
         client.connect()
         client.sock.write("0\n".encode())
         client.sock.timeout = 0
@@ -57,17 +57,17 @@ class PiBoxTest(unittest.TestCase):
         client.close()
 
     def testPhone(self):
-        client = BTClient(0, Device(config.phoneMac, name=config.phoneBTName))
+        client = BTClient(0, Device(config.phoneId, name=config.phoneBTName))
         client.connect()
         client.close()
 
     def testBTServerClients(self):
         server = BTServer((
-            BTClient(0, Device(config.phoneMac, name=config.phoneBTName)),
-            BTClient(1, Device(config.tempMac, config.tempPort)),
-            BTClient(2, Device(config.preasureMac, name=config.preasureBTName)),
-            SerialClient(3, Device(config.weightSerial)),
-            SerialClient(4, Device(config.mixSerial), timeout=3600),
+            BTClient(0, Device(config.phoneId, name=config.phoneBTName)),
+            BTClient(1, Device(config.tempId, config.tempPort)),
+            BTClient(2, Device(config.preasureId, name=config.preasureBTName)),
+            SerialClient(3, Device(config.weightId)),
+            SerialClient(4, Device(config.mixId), timeout=3600),
         ))
         server.connectClients()
         self.assertEqual(-1, server.clients[0].status)

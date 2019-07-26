@@ -1,3 +1,6 @@
+#!/bin/bash
+# Must be run on ../pibox
+
 sudo apt-get update
 
 #http://espace-raspberry-francais.fr/Debuter-sur-Raspberry-Francais/Connexion-Bureau-a-distance-Raspberry-Francais/
@@ -26,4 +29,13 @@ pip3 install .
 
 sudo python3 -m pip install pybluez pybluez[ble]
 sudo python3 -m pip install pyserial
+
+sudo apt-get install unzip
+wget https://github.com/cyrilvincent/CovEasyCasting/archive/master.zip
+unzip master.zip
+mv CovEasyCasting pibox
+cd pibox
+sh ./update.sh
+
+
 

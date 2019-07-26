@@ -4,7 +4,7 @@ import time
 
 print("Test mix device multithread")
 print("===========================")
-client = SerialClient(3, Device(config.mixSerial))
+client = SerialClient(3, Device(config.mixId))
 server = BTServer((client,))
 client.start()
 time.sleep(2)

@@ -10,10 +10,9 @@ from typing import List, Tuple
 
 class Device:
 
-    def __init__(self, id="00:00:00:00:00:00", port=0, name=None):
+    def __init__(self, id="00:00:00:00:00:00", port=0):
         self.id = id
         self.port = port
-        self.name = name
 
     def __repr__(self):
         return str(self.id)+"["+str(self.port)+"]"

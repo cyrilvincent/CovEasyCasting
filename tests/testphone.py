@@ -3,7 +3,7 @@ import config
 
 print("Test phone device")
 print("=================")
-client = BTClient(0, Device(config.phoneMac, name = config.phoneBTName))
+client = BTClient(0, Device(config.phoneId, name = config.phoneBTName))
 client.connect()
 print("Listening...")
 for _ in range(10):

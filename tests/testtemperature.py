@@ -3,7 +3,7 @@ import config
 
 print("Test temperature device")
 print("=======================")
-client = BTClient(1, Device(config.tempMac, config.tempMac))
+client = BTClient(1, Device(config.tempId, config.tempId))
 client.connect()
 print("Listening...")
 for _ in range(10):

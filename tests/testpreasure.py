@@ -3,7 +3,7 @@ import config
 
 print("Test preasure device")
 print("====================")
-client = BTClient(2, Device(config.preasureMac, name=config.preasureBTName))
+client = BTClient(2, Device(config.preasureId, name=config.preasureBTName))
 client.connect()
 print("Listening...")
 for _ in range(10):
