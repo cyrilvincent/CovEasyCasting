@@ -1,6 +1,5 @@
 #!/bin/bash
-wget https://github.com/cyrilvincent/CovEasyCasting/archive/master.zip
-unzip master.zip
-mv CovEasyCasting pibox
+git pull https://github.com/cyrilvincent/CovEasyCasting pibox
 cd pibox
+mv config.py config.old
 cp config.linux.py config.py

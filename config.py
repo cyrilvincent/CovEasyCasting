@@ -14,15 +14,15 @@ defaultConfig = """(
         BTClient(0, Device(config.phoneId, config.phonePort)),
         FileClient(1, Device(config.tempId, config.tempPort)),
         BTClient(2, Device(config.preasureId, config.preasurePort)),
-        SerialClient(3, Device(config.weightId)),
+        MockClient(3, Device(2500)),
         SerialClient(4, Device(config.mixId), timeout=3600),
     )"""
 
-fileConfig = """(
+mockConfig = """(
         BTClient(0, Device(config.phoneId, config.phonePort)),
         FileClient(1, Device(config.tempId, config.tempPort)),
         BTClient(2, Device(config.preasureId, config.preasurePort)),
-        SerialClient(3, Device(config.weightId)),
+        MockClient(3, Device(2500)),
         FileClient(4, Device("data/mix.csv"))
     )"""
 

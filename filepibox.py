@@ -2,6 +2,27 @@ import csv
 import time
 from genericpibox import *
 
+class MockClient(AbstractClient):
+
+    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(id,device,cb,timeout)
+        self.data = float(device.id)
+
+    def connect(self):
+        print(f"Connected to {self.device}")
+        self.status = -1
+
+    def run(self) -> None:
+        if self.status < -1:
+            self.connect()
+        self.status = 0
+        while(not self.isStop):
+            print(str(self.device)+"->"+str(self.data))
+            time.sleep(1)
+
+    def __repr__(self):
+        return "MockClient"+str(self.id)+str(self.device)
+
 class FileClient(AbstractClient):
 
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
@@ -63,6 +84,7 @@ class FileMixClient(FileClient):
 
 
 if __name__ == '__main__':
+    c = MockClient(0, Device(2500))
     c = FileClient(0, Device("data/temperature.csv"))
     c.connect()
     c.run()
