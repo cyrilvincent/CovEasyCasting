@@ -77,13 +77,14 @@ class BTServer(AbstractServer, BTClient):
         self.service = service
         self.sock:bluetooth.BluetoothSocket = None
         SerialClient.closeAllSerials()
+        self.clientSock = None
 
     def emit(self):
         while True:
             try:
                 json = self.makeJson()
                 print(f"Sending {json}")
-                self.sock.send(json)
+                self.clientSock.send(str(json+"\n").encode())
                 self.status = 0
             except IOError as ex:
                 self.status = -3
@@ -130,12 +131,12 @@ class BTServer(AbstractServer, BTClient):
     def listen(self):
         self.status = min(-2, self.status)
         logging.info("Waiting for connection...")
-        clientSock, clientInfo = self.sock.accept()
-        self.id = clientInfo
+        self.clientSock, clientInfo = self.sock.accept()
+        #self.id = clientInfo
         self.status = -1
         logging.info(f"Accepted connection from {self}")
         json = self.makeJson()
-        self.sock.send(json)
+        self.clientSock.send(str(json + "\n").encode())
         logging.debug(f"Sending {json}")
         self.status = 0
         self.emit()
@@ -170,9 +171,11 @@ class BTServer(AbstractServer, BTClient):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-    server = BTServer(eval(config.defaultConfig))
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
+    server = BTServer(eval(config.mockExceptPhoneConfig))
     server.clients[0].cb = server.phoneEvent
+    if type(server.clients[-1]) is FileMixClient:
+        server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     print("Dialog to devices")
     server.dialogClients()

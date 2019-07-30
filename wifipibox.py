@@ -41,9 +41,8 @@ class WifiServer(BTServer):
     def __repr__(self):
         return "WifiServer "+str(self.clients[0])+"<-"+str(self.device)+"<-"+str(self.clients[1:])
 
-
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
     server = WifiServer(eval(config.defaultConfig),"http://www.null.com:80","/")
     server.clients[0].cb = server.phoneEvent
     print(server)

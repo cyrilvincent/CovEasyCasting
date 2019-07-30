@@ -3,6 +3,7 @@ from mockpibox import *
 from typing import Tuple
 import config
 import logging
+import keyboard
 
 class ConsoleServer(BTServer):
 
@@ -16,6 +17,10 @@ class ConsoleServer(BTServer):
             print(json)
             self.status = 2
             time.sleep(1)
+            for i in range(6):
+                if keyboard.is_pressed(str(i)):
+                    print("Typing "+str(i))
+                    self.clients[0].cb(self.clients[0].device, i)
 
     def createServer(self):
         pass
@@ -29,9 +34,11 @@ class ConsoleServer(BTServer):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-    server = ConsoleServer(eval(config.defaultConfig))
+    logging.basicConfig(format='%(message)s', level=logging.WARNING)
+    server = ConsoleServer(eval(config.mockConfig))
     server.clients[0].cb = server.phoneEvent
+    if type(server.clients[-1]) is FileMixClient:
+        server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     print("Dialog to devices")
     server.dialogClients()

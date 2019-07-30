@@ -29,6 +29,7 @@ pip3 install .
 
 sudo python3 -m pip install pybluez pybluez[ble]
 sudo python3 -m pip install pyserial
+sudo python3 -m pip install keyboard
 
 sudo apt-get install unzip
 wget https://github.com/cyrilvincent/CovEasyCasting/archive/master.zip

@@ -73,7 +73,7 @@ def disconnect():
     server.stop()
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
     print("Create Rest & WebSocket Server")
     server.createServer()
 

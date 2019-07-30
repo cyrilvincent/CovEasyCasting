@@ -85,7 +85,7 @@ class FileMixClient(FileClient):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
     c = MockClient(0, Device(2500))
     c = FileClient(0, Device("data/temperature.csv"))
     c.connect()

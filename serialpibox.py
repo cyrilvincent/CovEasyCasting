@@ -68,7 +68,7 @@ class SerialClient(AbstractClient):
         return "SerialClient"+str(self.id)+str(self.device)
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
     SerialClient.closeAllSerials()
     c = SerialClient(0, Device("COM2"))
     c.connect()

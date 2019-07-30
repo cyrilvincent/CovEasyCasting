@@ -17,12 +17,12 @@ bluetooth.advertise_service(sock, "MockBTServer50",uuid,[uuid, bluetooth.SERIAL_
 
 print("Waiting for connection...")
 clientSock, clientInfo = sock.accept()
-print("Accepted connection from "+clientInfo)
+print("Accepted connection from "+str(clientInfo))
 import time
 try:
     i = 1
     while i<3600:
-        clientSock.send(i)
+        clientSock.send((str(i)+"\n").encode())
         i += 1
         time.sleep(1)
 except IOError as ex:
