@@ -2,6 +2,9 @@ https://www.teachmemicro.com/arduino-bluetooth/
 
 http://blog.whatgeek.com.pt/2015/09/bluetooth-communication-between-raspberry-pi-and-arduino/
 
+cordova plugin add cordova-plugin-bluetooth-serial
+https://www.npmjs.com/package/cordova-plugin-bluetooth-serial
+
 Etudier bluez543
 D:\CVC\Covestro\EasyCasting\bluez-5.43\test\example-gatt-*
 Sur Raspbian : https://scribles.net/running-ble-gatt-server-example-on-raspbian-stretch/#Step01
