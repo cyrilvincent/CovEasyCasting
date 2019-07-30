@@ -3,6 +3,7 @@ from typing import Tuple
 import flask
 import flask_socketio as io
 import config
+import logging
 
 class RestServer(WifiServer):
 
@@ -13,7 +14,7 @@ class RestServer(WifiServer):
         self.app = app
 
     def emit(self):
-        print("Emiting")
+        logging.info("Emiting")
         self.status = 0
         while self.status == 0:
             try:
@@ -25,7 +26,7 @@ class RestServer(WifiServer):
             time.sleep(1)
 
     def createServer(self):
-        print(f"Starting server {self.device}")
+        logging.info(f"Starting server {self.device}")
         app.run("0.0.0.0",self.device.port,debug=False)
         self.status = -1
 
@@ -38,14 +39,9 @@ class RestServer(WifiServer):
 app = flask.Flask(__name__)
 socketio = io.SocketIO(app, async_mode=None)
 
-server = RestServer((
-        BTClient(0, Device(config.phoneId, name=config.phoneBTName)),
-        BTClient(1, Device(config.tempId, config.tempPort)),
-        BTClient(2, Device(config.preasureId, name=config.preasureBTName)),
-        SerialClient(3, Device(config.weightId)),
-        SerialClient(4, Device(config.mixId), timeout=3600),
-    ), socketio, 80)
+server = RestServer(eval(config.defaultConfig), socketio, 80)
 server.clients[0].cb = server.phoneEvent
+
 print(server)
 print("Dialog to devices")
 server.dialogClients()
@@ -54,7 +50,7 @@ print(server)
 @app.route("/")
 def rest():
     json = server.makeJson()
-    print("Sending " + json)
+    logging.info("Sending " + json)
     res = flask.Response(response=json,status=200,mimetype="application/json")
     return res
 
@@ -77,6 +73,7 @@ def disconnect():
     server.stop()
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     print("Create Rest & WebSocket Server")
     server.createServer()
 

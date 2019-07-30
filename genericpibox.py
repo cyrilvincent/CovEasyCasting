@@ -4,6 +4,7 @@ import uuid
 import json
 import datetime
 import config
+import logging
 
 from typing import List, Tuple
 
@@ -37,7 +38,7 @@ class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
             dt = datetime.datetime.now()
             s = (dt - self.datetime).total_seconds()
             if s > self.timeout:
-                print("Timeout:"+str(self))
+                logging.debug("Timeout:"+str(self))
                 self._data = 0
         return self._data
 

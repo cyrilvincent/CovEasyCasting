@@ -1,7 +1,8 @@
 from btpibox import *
-from filepibox import *
+from mockpibox import *
 from typing import Tuple
 import config
+import logging
 
 class ConsoleServer(BTServer):
 
@@ -9,7 +10,7 @@ class ConsoleServer(BTServer):
         super().__init__(devices)
 
     def emit(self):
-        print("Emiting")
+        logging.info("Emiting")
         while True:
             json = self.makeJson()
             print(json)
@@ -28,6 +29,7 @@ class ConsoleServer(BTServer):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     server = ConsoleServer(eval(config.defaultConfig))
     server.clients[0].cb = server.phoneEvent
     print(server)

@@ -1,6 +1,6 @@
 import http.client
 import time
-
+import logging
 from btpibox import *
 from typing import List, Tuple
 import socket
@@ -15,11 +15,11 @@ class WifiServer(BTServer):
         self.uri = uri
 
     def emit(self):
-        print("Emiting")
+        logging.info("Emiting")
         while True:
             try:
                 json = self.makeJson()
-                print("Sending "+json)
+                logging.info("Sending "+json)
                 conn = http.client.HTTPConnection(self.host)
                 conn.request("POST",self.uri,json,{'Content-type': 'application/json'})
                 conn.close()
@@ -29,7 +29,7 @@ class WifiServer(BTServer):
             time.sleep(1)
 
     def createServer(self):
-        print(f"Server {self.device} Ok")
+        logging.info(f"Server {self.device} Ok")
 
     def listen(self):
         self.emit()
@@ -43,13 +43,8 @@ class WifiServer(BTServer):
 
 
 if __name__ == '__main__':
-    server = WifiServer((
-        BTClient(0, Device(config.phoneId, name=config.phoneBTName)),
-        BTClient(1, Device(config.tempId, config.tempPort)),
-        BTClient(2, Device(config.preasureId, name=config.preasureBTName)),
-        SerialClient(3, Device(config.weightId)),
-        SerialClient(4, Device(config.mixId), timeout=3600),
-    ),"http://www.null.com:80","/")
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    server = WifiServer(eval(config.defaultConfig),"http://www.null.com:80","/")
     server.clients[0].cb = server.phoneEvent
     print(server)
     print("Dialog to devices")

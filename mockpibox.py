@@ -1,5 +1,6 @@
 import csv
 import time
+import logging
 from genericpibox import *
 
 class MockClient(AbstractClient):
@@ -9,7 +10,7 @@ class MockClient(AbstractClient):
         self.data = float(device.id)
 
     def connect(self):
-        print(f"Connected to {self.device}")
+        logging.info(f"Connected to {self.device}")
         self.status = -1
 
     def run(self) -> None:
@@ -17,7 +18,7 @@ class MockClient(AbstractClient):
             self.connect()
         self.status = 0
         while(not self.isStop):
-            print(str(self.device)+"->"+str(self.data))
+            logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 
     def __repr__(self):
@@ -30,16 +31,16 @@ class FileClient(AbstractClient):
         self.values = None
 
     def connect(self):
-        print(f"Connecting to {self.device}")
+        logging.info(f"Connecting to {self.device}")
         try:
             f = open(self.device.id)
             self.values = list(csv.DictReader(f))
             f.close()
-            print(f"Connected to {self.device}")
+            logging.info(f"Connected to {self.device}")
             self.status = -1
         except IOError:
             self.status = -4
-            print(f"{self.device} is Down")
+            logging.error(f"{self.device} is Down")
 
     def run(self) -> None:
         if self.status < -1:
@@ -48,7 +49,7 @@ class FileClient(AbstractClient):
         while(not self.isStop):
             for row in self.values:
                 self.data = float(row["value"])
-                print(str(self.device)+"->"+str(self.data))
+                logging.debug(str(self.device)+"->"+str(self.data))
                 time.sleep(1)
 
     def __repr__(self):
@@ -65,13 +66,13 @@ class FileMixClient(FileClient):
             self.connect()
         self.status = 0
         while(not self.isStop):
-            print(str(self.device)+"->"+str(self.data))
+            logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 
     def phoneEvent(self, device, data):
         try:
             data = int(data)
-            print(str(data) + "->"+str(self.device))
+            logging.debug(str(data) + "->"+str(self.device))
             self.data = 0
             time.sleep(0.5)
             self.data = int([v["out"] for v in self.values if int(v["in"]) == data ][0])
@@ -84,6 +85,7 @@ class FileMixClient(FileClient):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     c = MockClient(0, Device(2500))
     c = FileClient(0, Device("data/temperature.csv"))
     c.connect()

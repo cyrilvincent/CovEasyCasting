@@ -1,8 +1,8 @@
-print("Pibox 72 Test")
-print("=============")
+print("Pibox 3 Test")
+print("============")
 
 mac = "C8:14:51:08:8F:3A"
-port = 72
+port = 3
 
 print(f"Connecting to {mac}[{port}]...")
 import bluetooth

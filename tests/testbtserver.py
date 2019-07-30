@@ -1,7 +1,7 @@
-port = 72
+port = 3
 print("Mock BT Test "+str(port))
-print("===============")
-# netstat to see all binding port
+print("==============")
+#netstat to see all binding port
 
 import uuid
 mac = uuid.getnode()

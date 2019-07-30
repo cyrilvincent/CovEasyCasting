@@ -1,7 +1,7 @@
 import serial
 import time
 import serial.tools.list_ports as ls
-import sys
+import logging
 
 from genericpibox import *
 
@@ -11,14 +11,14 @@ class SerialClient(AbstractClient):
         super().__init__(id,device,cb,timeout)
 
     def connect(self):
-        print(f"Connecting to {self.device}")
+        logging.info(f"Connecting to {self.device}")
         try:
             self.sock = serial.Serial(self.device.id)
-            print(f"Connected to {self.device}")
+            logging.info(f"Connected to {self.device}")
             self.status = -1
         except IOError:
             self.status = -4
-            print(f"{self.device} is Down")
+            logging.warning(f"{self.device} is Down")
 
     def run(self) -> None:
         while(not self.isStop):
@@ -28,7 +28,7 @@ class SerialClient(AbstractClient):
                 try:
                     data = self.sock.readline()
                     self.status = 0
-                    print(str(self.device)+"->"+str(data))
+                    logging.debug(str(self.device)+"->"+str(data))
                     self.data = float(data)
                     self.cb(self.device, self.data)
                 except TypeError:
@@ -68,6 +68,7 @@ class SerialClient(AbstractClient):
         return "SerialClient"+str(self.id)+str(self.device)
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     SerialClient.closeAllSerials()
     c = SerialClient(0, Device("COM2"))
     c.connect()

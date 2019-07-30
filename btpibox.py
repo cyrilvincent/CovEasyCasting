@@ -5,9 +5,11 @@ import time
 import json
 import serial
 import sys
+import logging
 
 from genericpibox import *
 from serialpibox import *
+from mockpibox import *
 from typing import List, Tuple
 
 class BTClient(SerialClient):
@@ -16,17 +18,17 @@ class BTClient(SerialClient):
         super().__init__(id,device,cb,timeout)
 
     def connect(self):
-        print(f"Connecting to {self.device}")
+        logging.info(f"Connecting to {self.device}")
         try:
             if isinstance(self.device.port, str):
                 self.findPort()
             self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
             self.sock.connect((self.device.id, self.device.port))
-            print(f"Connected to {self.device}")
+            logging.info(f"Connected to {self.device}")
             self.status = -1
         except IOError:
             self.status = -4
-            print(f"{self.device} is Down")
+            logging.error(str(self.device) + "is Down")
         except TypeError:
             pass
 
@@ -34,10 +36,10 @@ class BTClient(SerialClient):
         try:
             services = bluetooth.find_service(address=self.device.id)
             service = [s for s in services if self.device.port in str(s["name"])][0]
-            print("Change port "+self.device.port+" to "+str(service["port"]))
+            logging.debug("Change port "+self.device.port+" to "+str(service["port"]))
             self.device.port = int(service["port"])
         except:
-            print("Can't find "+self.device.port)
+            logging.warning("Can't find "+self.device.port)
             self.status = -4
 
 
@@ -49,7 +51,7 @@ class BTClient(SerialClient):
                 try:
                     data = self.sock.recv(1024)
                     self.status = 0
-                    print(str(self.device)+"->"+str(data))
+                    logging.debug(str(self.device)+"->"+str(data))
                     self.data = float(data)
                     self.cb(self.device, self.data)
                 except ValueError:
@@ -68,7 +70,7 @@ class BTClient(SerialClient):
 
 class BTServer(AbstractServer, BTClient):
 
-    def __init__(self, clients:Tuple[AbstractClient], port=72, service = "EasyCastingBox"):
+    def __init__(self, clients:Tuple[AbstractClient], port=0, service = "EasyCastingBox"):
         BTClient.__init__(self, 0, Device(self.getMac(), port))
         self.clients = clients
         self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
@@ -116,25 +118,25 @@ class BTServer(AbstractServer, BTClient):
             del client
 
     def createServer(self, nbClient = 1):
-        print(f"Starting server {self.device}")
+        logging.info(f"Starting server {self.device}")
         self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         self.sock.bind(("", self.device.port))
         self.sock.listen(nbClient)
-        print(f"Server {self.device} Ok")
+        logging.info(f"Server {self.device} Ok")
         bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS],
                                     [bluetooth.SERIAL_PORT_PROFILE])
-        print(f"Service {self.service} Ok")
+        logging.info(f"Service {self.service} Ok")
 
     def listen(self):
         self.status = min(-2, self.status)
-        print("Waiting for connection...")
+        logging.info("Waiting for connection...")
         clientSock, clientInfo = self.sock.accept()
         self.id = clientInfo
         self.status = -1
-        print(f"Accepted connection from {self}")
+        logging.info(f"Accepted connection from {self}")
         json = self.makeJson()
         self.sock.send(json)
-        print(f"Sending {json}")
+        logging.debug(f"Sending {json}")
         self.status = 0
         self.emit()
 
@@ -153,7 +155,7 @@ class BTServer(AbstractServer, BTClient):
             sock:serial.Serial = self.clients[-1].sock
             #sock.close()
             #sock.open()
-            print(str(data) + "->"+str(self.clients[-1].device))
+            logging.debug(str(data) + "->"+str(self.clients[-1].device))
             sock.write((str(data)+"\n").encode())
             self.clients[-1].data = 0
             #time.sleep(0.5)
@@ -161,20 +163,15 @@ class BTServer(AbstractServer, BTClient):
             #sock.open()
         except IOError:
             self.clients[-1].status = -4
-            print(f"{self.clients[-1].device} is Down")
+            logging.warning(f"{self.clients[-1].device} is Down")
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
 
 
 if __name__ == '__main__':
-    server = BTServer((
-        BTClient(0, Device(config.phoneId, name=config.phoneBTName)),
-        BTClient(1, Device(config.tempId, config.tempPort)),
-        BTClient(2, Device(config.preasureId, name=config.preasureBTName)),
-        SerialClient(3, Device(config.weightId)),
-        SerialClient(4, Device(config.mixId), timeout=3600),
-    ))
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    server = BTServer(eval(config.defaultConfig))
     server.clients[0].cb = server.phoneEvent
     print(server)
     print("Dialog to devices")
