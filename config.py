@@ -34,7 +34,7 @@ mockConfig = """(
         FileClient(1, Device("data/temperature.csv")),
         MockClient(2, Device(1000)),
         MockClient(3, Device(2500)),
-        FileMixClient(4, Device("data/mix.csv"))
+        FileMixClient(4, Device("data/mix.csv"), timeout=3600)
     )"""
 
 mockExceptPhoneConfig = """(
@@ -42,6 +42,6 @@ mockExceptPhoneConfig = """(
         FileClient(1, Device("data/temperature.csv")),
         MockClient(2, Device(1000)),
         MockClient(3, Device(2500)),
-        FileMixClient(4, Device("data/mix.csv"))
+        FileMixClient(4, Device("data/mix.csv"), timeout=3600)
     )"""
 

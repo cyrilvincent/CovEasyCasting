@@ -21,7 +21,7 @@ class SerialClient(AbstractClient):
             logging.warning(f"{self.device} is Down")
 
     def run(self) -> None:
-        while(not self.isStop):
+        while True:
             if self.status < -1:
                 self.connect()
             while(self.status >= -1):
@@ -37,32 +37,25 @@ class SerialClient(AbstractClient):
                     pass
                 except IOError:
                     self.status = -3
-                except :
+                except:
                     pass
             try:
                 self.sock.close()
                 self.status = min(-2, self.status)
             except:
                 pass
-            time.sleep(60)
-
-    def close(self):
-        try:
-            self.sock.close()
-            self.status = min(self.status, 0)
-        except:
-            pass
+            time.sleep(10)
 
     @staticmethod
     def closeAllSerials():
         l = [p.device for p in ls.comports()]
         for d in l:
             try:
-                serial.Serial(d)
-                serial.close()
+                logging.info("Closing "+str(d))
+                sock = serial.Serial(d)
+                sock.close()
             except:
                 pass
-
 
     def __repr__(self):
         return "SerialClient"+str(self.id)+str(self.device)

@@ -16,22 +16,20 @@ class RestServer(WifiServer):
     def emit(self):
         logging.info("Emiting")
         self.status = 0
-        while self.status == 0:
+        while True:
             try:
                 json = self.makeJson()
                 io.emit("response",json,broadcast=True)
                 self.status = 0
             except IOError as ex:
                 self.status = -4
+                time.sleep(9)
             time.sleep(1)
 
     def createServer(self):
         logging.info(f"Starting server {self.device}")
         app.run("0.0.0.0",self.device.port,debug=False)
         self.status = -1
-
-    def stop(self):
-        self.status = -2
 
     def __repr__(self):
         return "RestServer Wifi<-"+str(self.device)+"<-"+str(self.clients)

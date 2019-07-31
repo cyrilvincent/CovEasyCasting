@@ -35,7 +35,7 @@ class ConsoleServer(BTServer):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=logging.WARNING)
-    server = ConsoleServer(eval(config.mockConfig))
+    server = ConsoleServer(eval(config.hardwareConfig))
     server.clients[0].cb = server.phoneEvent
     if type(server.clients[-1]) is FileMixClient:
         server.clients[0].cb = server.clients[-1].phoneEvent

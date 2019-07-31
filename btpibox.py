@@ -42,9 +42,8 @@ class BTClient(SerialClient):
             logging.warning("Can't find "+self.device.port)
             self.status = -4
 
-
     def run(self) -> None:
-        while(not self.isStop):
+        while(True):
             if self.status < -1:
                 self.connect()
             while(self.status >= -1):
@@ -76,8 +75,8 @@ class BTServer(AbstractServer, BTClient):
         self.uuid = uuid
         self.service = service
         self.sock:bluetooth.BluetoothSocket = None
-        SerialClient.closeAllSerials()
         self.clientSock = None
+        SerialClient.closeAllSerials()
 
     def emit(self):
         while True:
@@ -106,31 +105,13 @@ class BTServer(AbstractServer, BTClient):
             self.status = 0
             self.emit()
 
-    def connectClient(self, num):
-        self.clients[num].connect()
-
     def connectClients(self):
         for client in self.clients:
             client.connect()
 
-    def dialogClient(self, num):
-        self.clients[num].start()
-
     def dialogClients(self):
         for client in self.clients:
             client.start()
-
-    def stopClients(self):
-        for client in self.clients:
-            client.stop()
-
-    def stopClient(self, num):
-        self.clients[num].stop()
-
-    def stopForceClient(self):
-        self.stopClients()
-        for client in self.clients:
-            del client
 
     def createServer(self, nbClient = 1):
         logging.info(f"Starting server {self.device}")
@@ -141,15 +122,6 @@ class BTServer(AbstractServer, BTClient):
         bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS],
                                     [bluetooth.SERIAL_PORT_PROFILE])
         logging.info(f"Service {self.service} Ok")
-
-    def stop(self):
-        self.stopClients()
-        try:
-            self.device.close()
-            self.sock.close()
-            self.status = -2
-        except:
-            pass
 
     def phoneEvent(self, device, data):
         try:
@@ -170,6 +142,15 @@ class BTServer(AbstractServer, BTClient):
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
 
+    def __del__(self):
+        try:
+            self.sock.close()
+            self.clientSock.close()
+            for c in self.clients:
+                del c
+        except:
+            pass
+
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
@@ -189,7 +170,6 @@ if __name__ == '__main__':
     print(server)
     print("Listening")
     server.listen()
-    print("Stop")
 
 
 

@@ -5,7 +5,7 @@ from genericpibox import *
 
 class MockClient(AbstractClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = 3600 * 24):
         super().__init__(id,device,cb,timeout)
         self.data = float(device.id)
 
@@ -17,7 +17,7 @@ class MockClient(AbstractClient):
         if self.status < -1:
             self.connect()
         self.status = 0
-        while(not self.isStop):
+        while(True):
             logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 
@@ -46,7 +46,7 @@ class FileClient(AbstractClient):
         if self.status < -1:
             self.connect()
         self.status = 0
-        while(not self.isStop):
+        while(True):
             for row in self.values:
                 self.data = float(row["value"])
                 logging.debug(str(self.device)+"->"+str(self.data))
@@ -65,7 +65,7 @@ class FileMixClient(FileClient):
         if self.status < -1:
             self.connect()
         self.status = 0
-        while(not self.isStop):
+        while(True):
             logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 
