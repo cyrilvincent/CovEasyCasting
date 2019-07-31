@@ -1,4 +1,4 @@
-port = 1
+port = 3
 print("Test Phone sending")
 print("==================")
 

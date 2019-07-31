@@ -88,9 +88,23 @@ class BTServer(AbstractServer, BTClient):
                 self.status = 0
             except IOError as ex:
                 self.status = -3
-                time.sleep(10)
-                self.connect()
+                print("Client disconnected")
+                time.sleep(2)
+                break;
             time.sleep(1)
+
+    def listen(self):
+        while True:
+            self.status = min(-2, self.status)
+            print("Waiting for connection...")
+            self.clientSock, clientInfo = self.sock.accept()
+            self.status = -1
+            print(f"Accepted connection from {clientInfo}")
+            json = self.makeJson()
+            self.clientSock.send(str(json + "\n").encode())
+            logging.debug(f"Sending {json}")
+            self.status = 0
+            self.emit()
 
     def connectClient(self, num):
         self.clients[num].connect()
@@ -128,18 +142,6 @@ class BTServer(AbstractServer, BTClient):
                                     [bluetooth.SERIAL_PORT_PROFILE])
         logging.info(f"Service {self.service} Ok")
 
-    def listen(self):
-        self.status = min(-2, self.status)
-        logging.info("Waiting for connection...")
-        self.clientSock, clientInfo = self.sock.accept()
-        self.status = -1
-        logging.info(f"Accepted connection from {clientInfo}")
-        json = self.makeJson()
-        self.clientSock.send(str(json + "\n").encode())
-        logging.debug(f"Sending {json}")
-        self.status = 0
-        self.emit()
-
     def stop(self):
         self.stopClients()
         try:
@@ -170,10 +172,10 @@ class BTServer(AbstractServer, BTClient):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
     server = BTServer(
         eval(config.mockExceptPhoneConfig),
-        1
+        3
     )
     server.clients[0].cb = server.phoneEvent
     if type(server.clients[-1]) is FileMixClient:

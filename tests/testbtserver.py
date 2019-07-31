@@ -1,4 +1,4 @@
-port = 1
+port = 3
 print("Mock BT Server Test "+str(port))
 print("=====================")
 #https://docs.microsoft.com/en-us/windows/win32/bluetooth/bluetooth-and-bind
