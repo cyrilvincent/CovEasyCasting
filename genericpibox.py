@@ -52,6 +52,9 @@ class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def run(self) -> None:...
 
+    def __repr__(self):
+        return str(self.device)
+
     def __del__(self):
         try:
             self.sock.close()

@@ -21,9 +21,6 @@ class MockClient(AbstractClient):
             logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 
-    def __repr__(self):
-        return "MockClient"+str(self.id)+str(self.device)
-
 class FileClient(AbstractClient):
 
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
@@ -52,9 +49,6 @@ class FileClient(AbstractClient):
                 logging.debug(str(self.device)+"->"+str(self.data))
                 time.sleep(1)
 
-    def __repr__(self):
-        return "FileClient"+str(self.id)+str(self.device)
-
 class FileMixClient(FileClient):
 
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
@@ -78,11 +72,6 @@ class FileMixClient(FileClient):
             self.data = int([v["out"] for v in self.values if int(v["in"]) == data ][0])
         except:
             pass
-
-    def __repr__(self):
-        return "FileMixClient"+str(self.id)+str(self.device)
-
-
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)

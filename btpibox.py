@@ -18,19 +18,22 @@ class BTClient(SerialClient):
         super().__init__(id,device,cb,timeout)
 
     def connect(self):
-        logging.info(f"Connecting to {self.device}")
-        try:
-            if isinstance(self.device.port, str):
-                self.findPort()
-            self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-            self.sock.connect((self.device.id, self.device.port))
-            logging.info(f"Connected to {self.device}")
+        if self.device.id != config.phoneId:
+            logging.info(f"Connecting to {self.device}")
+            try:
+                if isinstance(self.device.port, str):
+                    self.findPort()
+                self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+                self.sock.connect((self.device.id, self.device.port))
+                logging.info(f"Connected to {self.device}")
+                self.status = -1
+            except IOError:
+                self.status = -4
+                logging.error(str(self.device) + "is Down")
+            except TypeError:
+                pass
+        else:
             self.status = -1
-        except IOError:
-            self.status = -4
-            logging.error(str(self.device) + "is Down")
-        except TypeError:
-            pass
 
     def findPort(self):
         try:
@@ -48,11 +51,12 @@ class BTClient(SerialClient):
                 self.connect()
             while(self.status >= -1):
                 try:
-                    data = self.sock.recv(1024)
-                    self.status = 0
-                    logging.debug(str(self.device)+"->"+str(data))
-                    self.data = float(data)
-                    self.cb(self.device, self.data)
+                    if self.sock != None:
+                        data = self.sock.recv(1024)
+                        self.status = 0
+                        logging.debug(str(self.device)+"->"+str(data))
+                        self.data = float(data)
+                        self.cb(self.device, self.data)
                 except ValueError:
                     pass
                 except IOError:
@@ -64,9 +68,6 @@ class BTClient(SerialClient):
                 pass
             time.sleep(10)
 
-    def __repr__(self):
-        return "BTClient"+str(self.id)+str(self.device)
-
 class BTServer(AbstractServer, BTClient):
 
     def __init__(self, clients:Tuple[AbstractClient], port=0, service = config.serviceName, uuid = config.serviceUUID):
@@ -75,15 +76,13 @@ class BTServer(AbstractServer, BTClient):
         self.uuid = uuid
         self.service = service
         self.sock:bluetooth.BluetoothSocket = None
-        self.clientSock = None
-        SerialClient.closeAllSerials()
 
     def emit(self):
         while True:
             try:
                 json = self.makeJson()
                 print(f"Sending {json}")
-                self.clientSock.send(str(json+"\n").encode())
+                self.clients[0].sock.send(str(json+"\n").encode())
                 self.status = 0
             except IOError as ex:
                 self.status = -3
@@ -96,12 +95,10 @@ class BTServer(AbstractServer, BTClient):
         while True:
             self.status = min(-2, self.status)
             print("Waiting for connection...")
-            self.clientSock, clientInfo = self.sock.accept()
+            #self.clientSock, clientInfo = self.sock.accept()
+            self.clients[0].sock, clientInfo = self.sock.accept()
             self.status = -1
             print(f"Accepted connection from {clientInfo}")
-            json = self.makeJson()
-            self.clientSock.send(str(json + "\n").encode())
-            logging.debug(f"Sending {json}")
             self.status = 0
             self.emit()
 
@@ -153,10 +150,12 @@ class BTServer(AbstractServer, BTClient):
 
 
 if __name__ == '__main__':
+    print("BT Server PiBox")
+    print("===============")
     logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
     server = BTServer(
-        eval(config.mockExceptPhoneConfig),
-        3
+        eval(config.hardwareConfig),
+        config.btServerPort
     )
     server.clients[0].cb = server.phoneEvent
     if type(server.clients[-1]) is FileMixClient:

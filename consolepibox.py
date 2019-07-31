@@ -17,10 +17,10 @@ class ConsoleServer(BTServer):
             print(json)
             self.status = 2
             time.sleep(1)
-            for i in range(6):
-                if keyboard.is_pressed(str(i)):
-                    print("Typing "+str(i))
-                    self.clients[0].cb(self.clients[0].device, i)
+            # for i in range(6):
+            #     if keyboard.is_pressed(str(i)):
+            #         print("Typing "+str(i))
+            #         self.clients[0].cb(self.clients[0].device, i)
 
     def createServer(self):
         pass
@@ -30,11 +30,13 @@ class ConsoleServer(BTServer):
         self.emit()
 
     def __repr__(self):
-        return "ConsoleServer "+str(self.clients[0])+"<-Console<-"+str(self.clients[1:])
+        return "ConsoleServer "+str(self.clients[0].device)+"<-Console<-"+str(self.clients[1:])
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(message)s', level=logging.WARNING)
+    print("Console Server PiBox")
+    print("====================")
+    logging.basicConfig(format='%(message)s', level=logging.INFO)
     server = ConsoleServer(eval(config.hardwareConfig))
     server.clients[0].cb = server.phoneEvent
     if type(server.clients[-1]) is FileMixClient:

@@ -7,8 +7,14 @@ from genericpibox import *
 
 class SerialClient(AbstractClient):
 
+    nb = 0
+
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
         super().__init__(id,device,cb,timeout)
+        SerialClient.nb += 1
+        if SerialClient.nb == 1:
+            SerialClient.closeAllSerials()
+
 
     def connect(self):
         logging.info(f"Connecting to {self.device}")
@@ -57,12 +63,8 @@ class SerialClient(AbstractClient):
             except:
                 pass
 
-    def __repr__(self):
-        return "SerialClient"+str(self.id)+str(self.device)
-
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)
-    SerialClient.closeAllSerials()
     c = SerialClient(0, Device("COM2"))
     c.connect()
     c.run()
