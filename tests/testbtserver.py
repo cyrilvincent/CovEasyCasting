@@ -1,7 +1,7 @@
-port = 3
-print("Mock BT Test "+str(port))
-print("==============")
-#netstat to see all binding port
+port = 1
+print("Mock BT Server Test "+str(port))
+print("=====================")
+#https://docs.microsoft.com/en-us/windows/win32/bluetooth/bluetooth-and-bind
 
 import uuid
 mac = uuid.getnode()
@@ -13,7 +13,7 @@ sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 sock.bind(("",port))
 sock.listen(1)
 uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-bluetooth.advertise_service(sock, "MockBTServer50",uuid,[uuid, bluetooth.SERIAL_PORT_CLASS],[bluetooth.SERIAL_PORT_PROFILE])
+bluetooth.advertise_service(sock, "MockBTServer",uuid,[uuid, bluetooth.SERIAL_PORT_CLASS],[bluetooth.SERIAL_PORT_PROFILE])
 
 print("Waiting for connection...")
 clientSock, clientInfo = sock.accept()

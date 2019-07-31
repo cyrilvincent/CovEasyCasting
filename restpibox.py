@@ -41,6 +41,8 @@ socketio = io.SocketIO(app, async_mode=None)
 
 server = RestServer(eval(config.defaultConfig), socketio, 80)
 server.clients[0].cb = server.phoneEvent
+if type(server.clients[-1]) is FileMixClient:
+    server.clients[0].cb = server.clients[-1].phoneEvent
 
 print(server)
 print("Dialog to devices")

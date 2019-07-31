@@ -8,7 +8,7 @@ SerialClient.closeAllSerials()
 client = SerialClient(3, Device(config.weightId))
 client.connect()
 print("Listening...")
-for _ in range(10):
+while True:
     data = client.sock.readline()
     print(data)
 client.close()

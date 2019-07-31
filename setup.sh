@@ -27,9 +27,10 @@ cd gattlib-0.20150805/
 sed -ie 's/boost_python-py34/boost_python-py35/' setup.py
 pip3 install .
 
-sudo python3 -m pip install pybluez pybluez[ble]
+sudo python3 -m pip install PyBluez PyBluez[ble]
 sudo python3 -m pip install pyserial
 sudo python3 -m pip install keyboard
+sudo python3 -m pip install Flask
 
 sudo apt-get install unzip
 wget https://github.com/cyrilvincent/CovEasyCasting/archive/master.zip

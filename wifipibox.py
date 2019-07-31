@@ -45,6 +45,8 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)
     server = WifiServer(eval(config.defaultConfig),"http://www.null.com:80","/")
     server.clients[0].cb = server.phoneEvent
+    if type(server.clients[-1]) is FileMixClient:
+        server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     print("Dialog to devices")
     server.dialogClients()

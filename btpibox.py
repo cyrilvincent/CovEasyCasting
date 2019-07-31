@@ -70,10 +70,10 @@ class BTClient(SerialClient):
 
 class BTServer(AbstractServer, BTClient):
 
-    def __init__(self, clients:Tuple[AbstractClient], port=0, service = "EasyCastingBox"):
+    def __init__(self, clients:Tuple[AbstractClient], port=0, service = config.serviceName, uuid = config.serviceUUID):
         BTClient.__init__(self, 0, Device(self.getMac(), port))
         self.clients = clients
-        self.uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ff"
+        self.uuid = uuid
         self.service = service
         self.sock:bluetooth.BluetoothSocket = None
         SerialClient.closeAllSerials()
@@ -132,9 +132,8 @@ class BTServer(AbstractServer, BTClient):
         self.status = min(-2, self.status)
         logging.info("Waiting for connection...")
         self.clientSock, clientInfo = self.sock.accept()
-        #self.id = clientInfo
         self.status = -1
-        logging.info(f"Accepted connection from {self}")
+        logging.info(f"Accepted connection from {clientInfo}")
         json = self.makeJson()
         self.clientSock.send(str(json + "\n").encode())
         logging.debug(f"Sending {json}")
@@ -172,7 +171,10 @@ class BTServer(AbstractServer, BTClient):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)
-    server = BTServer(eval(config.mockExceptPhoneConfig))
+    server = BTServer(
+        eval(config.mockExceptPhoneConfig),
+        1
+    )
     server.clients[0].cb = server.phoneEvent
     if type(server.clients[-1]) is FileMixClient:
         server.clients[0].cb = server.clients[-1].phoneEvent

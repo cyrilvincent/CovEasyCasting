@@ -10,6 +10,8 @@ mixId = "COM3"
 mixPort = 0
 timeOutData = 60
 loggingLevel = 10 # Debug
+serviceName = "EasyCastingBox"
+serviceUUID = "94f72d29-2006-2010-1972-fba39e49d4ff"
 
 defaultConfig = """(
         BTClient(0, Device(config.phoneId, config.phonePort)),

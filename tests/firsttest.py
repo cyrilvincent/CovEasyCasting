@@ -7,11 +7,11 @@ import config
 import serial
 from btpibox import *
 
-# print("Connecting to temperature device...")
-# device = Device(config.tempMac, config.tempPort)
-# client = BTClient(1,device)
-# client.connect()
-# client.close()
+print("Connecting to temperature device...")
+device = Device(config.tempMac, config.tempPort)
+client = BTClient(1,device)
+client.connect()
+client.close()
 
 print("Connecting to preasure device...")
 device = Device(config.preasureId, name = config.preasureBTName)

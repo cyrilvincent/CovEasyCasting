@@ -17,4 +17,5 @@ for i in range(6):
     print("Listening...")
     data = client.sock.readline()
     print(data)
+    time.sleep(1)
 client.sock.close()
