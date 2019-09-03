@@ -12,6 +12,7 @@ from serialpibox import *
 from mockpibox import *
 from typing import List, Tuple
 
+
 class BTClient(SerialClient):
 
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
@@ -23,6 +24,7 @@ class BTClient(SerialClient):
             try:
                 if isinstance(self.device.port, str):
                     self.findPort()
+                bluetooth.BluetoothSocket.readline = BTClient.readline1024
                 self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
                 self.sock.connect((self.device.id, self.device.port))
                 logging.info(f"Connected to {self.device}")
@@ -52,7 +54,8 @@ class BTClient(SerialClient):
             while(self.status >= -1):
                 try:
                     if self.sock != None:
-                        data = self.sock.recv(1024)
+                        #data = self.sock.recv(1024)
+                        data = self.sock.readline()
                         self.status = 0
                         logging.debug(str(self.device)+"->"+str(data))
                         self.data = float(data)
@@ -67,6 +70,15 @@ class BTClient(SerialClient):
             except:
                 pass
             time.sleep(10)
+
+    def readline1024(self):
+        s = ""
+        while (True):
+            data = self.recv(1024).decode()
+            s += data
+            if '\r\n' in data:
+                break;
+        return s
 
 class BTServer(AbstractServer, BTClient):
 
