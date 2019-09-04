@@ -136,14 +136,9 @@ class BTServer(AbstractServer, BTClient):
         try:
             data = int(data)
             sock:serial.Serial = self.clients[-1].sock
-            #sock.close()
-            #sock.open()
             logging.debug(str(data) + "->"+str(self.clients[-1].device))
             sock.write((str(data)+"\n").encode())
             self.clients[-1].data = 0
-            #time.sleep(0.5)
-            #sock.close()
-            #sock.open()
         except IOError:
             self.clients[-1].status = -4
             logging.warning(f"{self.clients[-1].device} is Down")
@@ -154,12 +149,10 @@ class BTServer(AbstractServer, BTClient):
     def __del__(self):
         try:
             self.sock.close()
-            self.clientSock.close()
             for c in self.clients:
                 del c
         except:
             pass
-
 
 if __name__ == '__main__':
     print("BT Server PiBox")

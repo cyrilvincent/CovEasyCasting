@@ -15,9 +15,9 @@ btServerPort = 3
 
 defaultConfig = """(
         BTClient(0, Device(config.phoneId)),
-        FileClient(1, Device("data/temperature.csv")),
+        BTClient(1, Device(config.tempId, config.tempPort)),
         MockClient(2, Device(1000)),
-        MockClient(3, Device(2500)),
+        SerialClient(3, Device(config.weightId)),
         SerialClient(4, Device(config.mixId), timeout=3600),
     )"""
 

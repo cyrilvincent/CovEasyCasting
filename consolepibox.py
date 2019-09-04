@@ -15,12 +15,7 @@ class ConsoleServer(BTServer):
         while True:
             json = self.makeJson()
             print(json)
-            self.status = 2
             time.sleep(1)
-            # for i in range(6):
-            #     if keyboard.is_pressed(str(i)):
-            #         print("Typing "+str(i))
-            #         self.clients[0].cb(self.clients[0].device, i)
 
     def createServer(self):
         pass

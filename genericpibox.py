@@ -8,7 +8,6 @@ import logging
 
 from typing import List, Tuple
 
-
 class Device:
 
     def __init__(self, id="00:00:00:00:00:00", port=0):

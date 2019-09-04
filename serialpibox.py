@@ -1,7 +1,6 @@
 import serial
 import time
 import serial.tools.list_ports as ls
-import logging
 
 from genericpibox import *
 
@@ -65,7 +64,7 @@ class SerialClient(AbstractClient):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)
-    c = SerialClient(0, Device("COM2"))
+    c = SerialClient(0, Device("COM5"))
     c.connect()
     c.run()
     c.close()
