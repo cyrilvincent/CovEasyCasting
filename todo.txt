@@ -1,5 +1,2 @@
-https://www.teachmemicro.com/arduino-bluetooth/
-http://blog.whatgeek.com.pt/2015/09/bluetooth-communication-between-raspberry-pi-and-arduino/
-
 cordova plugin add cordova-plugin-bluetooth-serial
 https://www.npmjs.com/package/cordova-plugin-bluetooth-serial
