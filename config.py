@@ -3,7 +3,7 @@ tempId = "00:0E:EA:CF:58:B8"
 tempPort = 1
 preasureId = "C8:14:51:08:8F:3A"
 preasurePort = "BTSPPServer"
-weightId = "COM1"
+weightId = "COM5"
 weightPort = 0
 mixId = "COM3"
 mixPort = 0
@@ -25,7 +25,7 @@ hardwareConfig = """(
         BTClient(0, Device(config.phoneId)),
         BTClient(1, Device(config.tempId, config.tempPort)),
         BTClient(2, Device(config.preasureId, config.preasurePort)),
-        MockClient(3, Device(2500)),
+        SerialClient(3, Device(config.weightId)),
         SerialClient(4, Device(config.mixId), timeout=3600),
     )"""
 

@@ -1,8 +1,10 @@
 int data = 0;
+int res = 0;
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
+  Serial.println("Starting Mix");
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -11,10 +13,13 @@ void setup() {
 void loop() {
   while (Serial.available() > 0) {
     data = Serial.readStringUntil('\n').toInt();
-    //int in_data = Serial.parseInt();
+    //int data = Serial.parseInt();
     digitalWrite(LED_BUILTIN, HIGH);
+    if((data > 0) && (data <= 5)) {
+        res = 1;
+    }
+    Serial.println(res);
     delay(200);
-    Serial.println("1");
     digitalWrite(LED_BUILTIN, LOW); 
   }
 }

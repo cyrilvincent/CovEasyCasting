@@ -1,10 +1,12 @@
 #mode on windows
 import serial
 
-print("Read COM1")
-sock = serial.Serial("COM1")
-s = sock.readline()
-print(s)
+port="COM5"
+print("Read "+port)
+sock = serial.Serial(port)
+while(True):
+    s = sock.readline()
+    print(s)
 sock.close()
 
 #echo hello > COM2
