@@ -1,4 +1,4 @@
-port = 3
+port = 4
 print("Mock BT Server Test "+str(port))
 print("=====================")
 #https://docs.microsoft.com/en-us/windows/win32/bluetooth/bluetooth-and-bind
@@ -6,7 +6,7 @@ print("=====================")
 import uuid
 mac = uuid.getnode()
 mac = ':'.join(("%012X" % mac)[i:i+2] for i in range(0, 12, 2))
-print("Starting BT Server "+mac+" "+str(port)+"...")
+print("Starting BT Server "+mac+" "+str(port)+" ...")
 
 import bluetooth
 sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)

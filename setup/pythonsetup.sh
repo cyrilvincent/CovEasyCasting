@@ -18,6 +18,7 @@ wget https://github.com/cyrilvincent/CovEasyCasting/archive/master.zip
 unzip master.zip
 mv CovEasyCasting pibox
 cd pibox
-
-
+#ou
+git clone --depth 1 https://github.com/cyrilvincent/CovEasyCasting.git pibox
+cp config.linux.py config.py
 

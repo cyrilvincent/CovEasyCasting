@@ -12,7 +12,6 @@ from serialpibox import *
 from mockpibox import *
 from typing import List, Tuple
 
-
 class BTClient(SerialClient):
 
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
@@ -57,7 +56,7 @@ class BTClient(SerialClient):
                         #data = self.sock.recv(1024)
                         data = self.sock.readline()
                         self.status = 0
-                        logging.debug(str(self.device)+"->"+str(data))
+                        logging.debug(str(self.device)+"->"+str(data).strip())
                         self.data = float(data)
                         self.cb(self.device, self.data)
                 except ValueError:
@@ -107,7 +106,6 @@ class BTServer(AbstractServer, BTClient):
         while True:
             self.status = min(-2, self.status)
             print("Waiting for connection...")
-            #self.clientSock, clientInfo = self.sock.accept()
             self.clients[0].sock, clientInfo = self.sock.accept()
             self.status = -1
             print(f"Accepted connection from {clientInfo}")
@@ -122,14 +120,13 @@ class BTServer(AbstractServer, BTClient):
         for client in self.clients:
             client.start()
 
-    def createServer(self, nbClient = 1):
+    def createServer(self):
         logging.info(f"Starting server {self.device}")
         self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         self.sock.bind(("", self.device.port))
-        self.sock.listen(nbClient)
+        self.sock.listen(1)
         logging.info(f"Server {self.device} Ok")
-        bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS],
-                                    [bluetooth.SERIAL_PORT_PROFILE])
+        bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS], [bluetooth.SERIAL_PORT_PROFILE])
         logging.info(f"Service {self.service} Ok")
 
     def phoneEvent(self, device, data):

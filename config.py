@@ -8,10 +8,10 @@ weightPort = 0
 mixId = "COM3"
 mixPort = 0
 timeOutData = 60
+btServerPort = 4
 loggingLevel = 10 # Debug
 serviceName = "EasyCastingBox"
 serviceUUID = "94f72d29-2006-2010-1972-fba39e49d4ff"
-btServerPort = 3
 
 defaultConfig = """(
         BTClient(0, Device(config.phoneId)),
@@ -26,7 +26,7 @@ hardwareConfig = """(
         BTClient(1, Device(config.tempId, config.tempPort)),
         BTClient(2, Device(config.preasureId, config.preasurePort)),
         SerialClient(3, Device(config.weightId)),
-        SerialClient(4, Device(config.mixId), timeout=3600),
+        SerialClient(4, Device(config.mixId)),
     )"""
 
 mockConfig = """(

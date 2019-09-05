@@ -1,7 +1,6 @@
 #include <SoftwareSerial.h>
 #include <math.h>
 
-#define ONE_WIRE_BUS 2
 #define RxD 6
 #define TxD 7
 
@@ -26,7 +25,8 @@ void loop(void)
   int a = analogRead(pinTempSensor);
   float R = 1023.0/a-1.0;
   R = R0*R;
-  float temp = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
+  float temp = 1.0/(log(R/R0)/B+1/298.15)-273.15;
+  temp -= 1;
   Serial.println(temp);
   blueToothSerial.println(temp);
   delay(1000);
