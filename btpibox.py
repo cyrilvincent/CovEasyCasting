@@ -10,7 +10,7 @@ import logging
 from genericpibox import *
 from serialpibox import *
 from mockpibox import *
-from typing import List, Tuple
+from typing import Tuple
 
 class BTClient(SerialClient):
 
@@ -79,6 +79,13 @@ class BTClient(SerialClient):
                 break;
         return s
 
+    def readline1(self):
+        s = ""
+        while (data != '\n'):
+            data = self.recv(1).decode()
+            s += data
+        return s
+
 class BTServer(AbstractServer, BTClient):
 
     def __init__(self, clients:Tuple[AbstractClient], port=0, service = config.serviceName, uuid = config.serviceUUID):
@@ -89,7 +96,7 @@ class BTServer(AbstractServer, BTClient):
         self.sock:bluetooth.BluetoothSocket = None
 
     def emit(self):
-        while True:
+        while self.status > -2:
             try:
                 json = self.makeJson()
                 print(f"Sending {json}")
@@ -98,8 +105,6 @@ class BTServer(AbstractServer, BTClient):
             except IOError as ex:
                 self.status = -3
                 print("Client disconnected")
-                time.sleep(1)
-                break;
             time.sleep(1)
 
     def listen(self):

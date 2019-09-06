@@ -56,9 +56,9 @@ class SerialClient(AbstractClient):
         l = [p.device for p in ls.comports()]
         for d in l:
             try:
-                logging.info("Closing "+str(d))
                 sock = serial.Serial(d)
                 sock.close()
+                logging.info(str(d)+" closed")
             except:
                 pass
 

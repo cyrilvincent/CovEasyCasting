@@ -3,7 +3,6 @@ from mockpibox import *
 from typing import Tuple
 import config
 import logging
-import keyboard
 
 class ConsoleServer(BTServer):
 
