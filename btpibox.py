@@ -98,18 +98,17 @@ class BTServer(AbstractServer, BTClient):
             except IOError as ex:
                 self.status = -3
                 print("Client disconnected")
-                time.sleep(2)
+                time.sleep(1)
                 break;
             time.sleep(1)
 
     def listen(self):
         while True:
-            self.status = min(-2, self.status)
+            self.clients[0].status = min(-2, self.status)
             print("Waiting for connection...")
             self.clients[0].sock, clientInfo = self.sock.accept()
             self.status = -1
             print(f"Accepted connection from {clientInfo}")
-            self.status = 0
             self.emit()
 
     def connectClients(self):
@@ -123,9 +122,11 @@ class BTServer(AbstractServer, BTClient):
     def createServer(self):
         logging.info(f"Starting server {self.device}")
         self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        self.sock.bind(("", self.device.port))
+        self.sock.bind(("", config.btServerPort))
+        self.device.port = self.sock.getsockname()[1]
         self.sock.listen(1)
-        logging.info(f"Server {self.device} Ok")
+        self.status = -1
+        print(f"Server {self.device} started")
         bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS], [bluetooth.SERIAL_PORT_PROFILE])
         logging.info(f"Service {self.service} Ok")
 

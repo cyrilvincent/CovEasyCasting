@@ -1,6 +1,6 @@
 phoneId = "Phone"
 tempId = "00:0E:EA:CF:58:B8"
-tempPort = 1
+tempPort = 0
 preasureId = "C8:14:51:08:8F:3A"
 preasurePort = "BTSPPServer"
 weightId = "COM5"
@@ -8,7 +8,7 @@ weightPort = 0
 mixId = "COM3"
 mixPort = 0
 timeOutData = 60
-btServerPort = 4
+btServerPort = 1
 loggingLevel = 10 # Debug
 serviceName = "EasyCastingBox"
 serviceUUID = "94f72d29-2006-2010-1972-fba39e49d4ff"
