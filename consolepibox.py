@@ -1,3 +1,4 @@
+#!/bin/python3
 from btpibox import *
 from mockpibox import *
 from typing import Tuple
