@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 print("Seeeduino tempbt Test")
 print("=====================")
 

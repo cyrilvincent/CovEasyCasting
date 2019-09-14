@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from btpibox import *
 import config
 

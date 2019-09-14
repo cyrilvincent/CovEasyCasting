@@ -3,5 +3,4 @@ sudo apt-get install -y bluetooth libbluetooth-dev
 pip3 install PyBluez
 pip3 install pyserial
 git clone --depth 1 https://github.com/cyrilvincent/CovEasyCasting.git pibox
-cp config.linux.py config.py
 

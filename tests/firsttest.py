@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 print("PiBox Devices Test")
 print("==================")
 

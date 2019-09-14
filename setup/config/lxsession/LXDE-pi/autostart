@@ -1,0 +1,7 @@
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@lxterminal --command="/home/pi/pibox/setup/autostart.sh"
+@xset s off
+@xset -dpms
+@xset s noblank
+

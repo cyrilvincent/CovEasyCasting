@@ -7,3 +7,4 @@ sudo apt-get install -y xrdp
 #Autostart
 #https://www.raspberrypi.org/forums/viewtopic.php?f=27&t=11256
 
+sudo apt-get install samba samba-common-bin

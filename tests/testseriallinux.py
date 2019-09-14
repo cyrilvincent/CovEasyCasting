@@ -1,4 +1,4 @@
-#mode on windows
+#!/usr/bin/python3
 import serial
 
 port="/dev/ttyUSB0"

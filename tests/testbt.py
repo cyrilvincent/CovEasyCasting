@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 print("BlueTooth Test")
 print("==============")
 
