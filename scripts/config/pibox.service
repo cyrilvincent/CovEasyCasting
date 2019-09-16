@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 ExecStart=/bin/bash autostart.sh
-WorkingDirectory=/home/pi/pibox/setup
+WorkingDirectory=/home/pi/pibox/scripts
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
