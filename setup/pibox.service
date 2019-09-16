@@ -1,10 +1,9 @@
 [Unit]
 Description=PiBox Autostart
-After=network.target
 
 [Service]
-ExecStart=/bin/bash autostart.sh > pibox.log
-WorkingDirectory=/home/pi
+ExecStart=/bin/bash autostart.sh
+WorkingDirectory=/home/pi/pibox/setup
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
