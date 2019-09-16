@@ -1,9 +1,9 @@
 #!/bin/bash
 #sudo cp pibox.service /etc/systemd/system/pibox.service
-#sudo systemctl start myscript.service
-#sudo systemctl stop myscript.service
+#sudo systemctl start pibox.service
+#sudo systemctl stop pibox.service
 #To enable the service
-#sudo systemctl enable myscript.service
+#sudo systemctl enable pibox.service
 echo AutoStart PiBox
 echo Kill previous version
 pkill -9 python3

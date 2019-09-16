@@ -3,8 +3,8 @@ Description=PiBox Autostart
 Wants=network.target
 
 [Service]
-ExecStart=/bin/bash autostart.sh
-WorkingDirectory=/home/pi/pibox
+ExecStart=/bin/ bash autostart.sh > pibox.log
+WorkingDirectory=/home/pi
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
