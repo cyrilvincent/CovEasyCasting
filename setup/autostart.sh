@@ -16,4 +16,4 @@ echo PiBox update >> /home/pi/pibox.log
 git pull >> /home/pi/pibox.log
 sleep 1
 echo Starting PiBox >> /home/pi/pibox.log
-python3 consolepibox.py >> /home/pi/pibox.log
+python3 consolepibox.py 2>> /home/pi/pibox.log
