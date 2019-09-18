@@ -11,9 +11,11 @@ print("Starting BT Server "+mac+" "+str(port)+" ...")
 import bluetooth
 sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 sock.bind(("",port))
+port = sock.getsockname()[1]
+print("Started BT Server "+mac+" "+str(port)+" ...")
 sock.listen(1)
 uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-#bluetooth.advertise_service(sock, "MockBTServer",uuid,[uuid, bluetooth.SERIAL_PORT_CLASS],[bluetooth.SERIAL_PORT_PROFILE])
+bluetooth.advertise_service(sock, "MockBTServer",uuid,[uuid, bluetooth.SERIAL_PORT_CLASS],[bluetooth.SERIAL_PORT_PROFILE])
 
 print("Waiting for connection...")
 clientSock, clientInfo = sock.accept()
