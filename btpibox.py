@@ -133,8 +133,8 @@ class BTServer(AbstractServer, BTClient):
         self.sock.listen(1)
         self.status = -1
         print(f"Server {self.device} started")
-        #bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS], [bluetooth.SERIAL_PORT_PROFILE])
-        #logging.info(f"Service {self.service} Ok")
+        bluetooth.advertise_service(self.sock, self.service , self.uuid, [self.uuid, bluetooth.SERIAL_PORT_CLASS], [bluetooth.SERIAL_PORT_PROFILE])
+        logging.info(f"Service {self.service} Ok")
 
     def phoneEvent(self, device, data):
         try:

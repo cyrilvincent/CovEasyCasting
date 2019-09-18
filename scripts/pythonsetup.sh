@@ -22,3 +22,5 @@ sudo systemctl daemon-reload
 sudo systemctl enable var-run-sdp.path
 sudo systemctl enable var-run-sdp.service
 sudo systemctl start var-run-sdp.path
+sudo usermod -aG bluetooth pi
+
