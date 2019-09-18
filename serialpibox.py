@@ -11,8 +11,8 @@ class SerialClient(AbstractClient):
     def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
         super().__init__(id,device,cb,timeout)
         SerialClient.nb += 1
-        if SerialClient.nb == 1:
-            SerialClient.closeAllSerials()
+        # if SerialClient.nb == 1:
+        #     SerialClient.closeAllSerials()
 
 
     def connect(self):
