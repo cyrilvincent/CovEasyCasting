@@ -48,6 +48,7 @@ class BTClient(SerialClient):
             self.status = -4
 
     def run(self) -> None:
+        time.sleep(100)
         while(True):
             if self.status < -1:
                 self.connect()

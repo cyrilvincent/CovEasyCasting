@@ -6,6 +6,7 @@ pip3 install PyBluez
 
 git clone --depth 1 https://github.com/cyrilvincent/CovEasyCasting.git pibox
 
+sudo apt-get install -y samba samba-common-bin
 sudo cp /home/pi/pibox/scripts/config/smb.conf /etc/samba/smb.conf
 
 #https://stackoverflow.com/questions/36675931/bluetooth-btcommon-bluetootherror-2-no-such-file-or-directory
@@ -14,6 +15,8 @@ sudo cp /home/pi/pibox/scripts/config/smb.conf /etc/samba/smb.conf
 # Dans /etc/systemd/system/dbus-org.bluez.service
 # Ajouter -C : ExecStart=/usr/lib/bluetooth/bluetoothd -C
 sudo sdptool add SP
+sudo systemctl daemon-reload
+sudo service bluetooth restart
 sudo usermod -G bluetooth -a pi
 sudo chgrp bluetooth /var/run/sdp
 sudo cp /home/pi/pibox/scripts/config/var-run-sdp.path /etc/systemd/system/var-run-sdp.path
@@ -23,4 +26,5 @@ sudo systemctl enable var-run-sdp.path
 sudo systemctl enable var-run-sdp.service
 sudo systemctl start var-run-sdp.path
 sudo usermod -aG bluetooth pi
+sudo reboot
 
