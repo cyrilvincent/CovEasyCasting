@@ -48,7 +48,6 @@ class BTClient(SerialClient):
             self.status = -4
 
     def run(self) -> None:
-        time.sleep(100)
         while(True):
             if self.status < -1:
                 self.connect()
@@ -164,7 +163,7 @@ if __name__ == '__main__':
     print("===============")
     logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
     server = BTServer(
-        eval(config.hardwareConfig),
+        eval(config.mockConfig),
         config.btServerPort
     )
     server.clients[0].cb = server.phoneEvent
