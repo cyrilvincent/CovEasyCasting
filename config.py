@@ -10,8 +10,8 @@ mixPort = 0
 timeOutData = 60
 btServerPort = 0
 loggingLevel = 10 # Debug
-serviceName = "EasyCastingBox"
-serviceUUID = "94f72d29-2006-2010-1972-fba39e49d4ff"
+serviceName = "PiBox"
+serviceUUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
 defaultConfig = """(
         BTClient(0, Device(config.phoneId)),
