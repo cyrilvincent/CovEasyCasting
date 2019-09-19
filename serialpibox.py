@@ -63,7 +63,7 @@ class SerialClient(AbstractClient):
                 pass
 
     def parseData(self, data:str):
-        if data[3] == ":":
+        if len(data) > 4 and data[3] == ":":
             prefix = ""
             if data.startswith("pho:"):
                 prefix = "pho"
