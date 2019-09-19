@@ -139,10 +139,10 @@ class BTServer(AbstractServer, BTClient):
     def phoneEvent(self, device, data):
         try:
             data = int(data)
-            sock:serial.Serial = self.clients[-1].sock
-            logging.debug(str(data) + "->"+str(self.clients[-1].device))
-            sock.write((str(data)+"\n").encode())
-            self.clients[-1].data = 0
+            sock = self.clients[-1].sock
+            sock.send((str(data)+"\n").encode())
+            logging.warning(str(data) + "->" + str(self.clients[-1].device))
+        #self.clients[-1].data = 0
         except IOError:
             self.clients[-1].status = -4
             logging.warning(f"{self.clients[-1].device} is Down")
@@ -164,7 +164,7 @@ class BTServer(AbstractServer, BTClient):
 if __name__ == '__main__':
     print("BT Server PiBox")
     print("===============")
-    logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
     server = BTServer(
         eval(config.hardwareConfig),
         config.btServerPort
