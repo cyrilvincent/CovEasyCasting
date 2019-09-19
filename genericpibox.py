@@ -88,9 +88,10 @@ class AbstractServer(metaclass=abc.ABCMeta):
     def getByPrefix(self, prefix):
         res = [c for c in self.clients if c.prefix == prefix]
         if len(res) == 0:
-            logging.fatal(f"Prefix {prefix} not found")
-            sys.exit(1)
-        return res[0]
+            logging.error(f"Prefix {prefix} not found")
+            return self.clients[["pho","tem","wei","pre","mix"].index(prefix)]
+        else:
+            return res[0]
 
     @abc.abstractmethod
     def connectClients(self):...

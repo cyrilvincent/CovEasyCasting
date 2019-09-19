@@ -59,7 +59,8 @@ class BTClient(SerialClient):
                         self.status = 0
                         logging.debug(str(self.device)+"->"+str(data).strip())
                         self.data = float(self.parseData(data))
-                        self.cb(self.device, self.data)
+                        if self.prefix == "pho":
+                            self.cb(self.device, self.data)
                 except ValueError:
                     pass
                 except IOError:
@@ -139,18 +140,18 @@ class BTServer(AbstractServer, BTClient):
     def phoneEvent(self, device, data):
         try:
             data = int(data)
-            sock = self.clients[-1].sock
+            mix = self.getByPrefix("mix")
+            sock = mix.sock
             sock.send((str(data)+"\n").encode())
             #sock.write((str(data) + "\n").encode()) if Serial
-            logging.warning(str(data) + "->" + str(self.clients[-1].device))
-            mix = self.getByPrefix("mix")
-            self.clients[self.getByPrefix("mix")].data = 0
+            logging.warning(str(data) + "->" + str(mix.device))
+            mix.data = 0
         except IOError:
-            self.clients[self.getByPrefix("mix")].status = -4
-            logging.warning(f"{self.clients[self.getByPrefix('mix')].device} is Down")
+            mix.status = -4
+            logging.warning(f"{self.getByPrefix('mix').device} is Down")
         except AttributeError:
-            self.clients[mix].status = -4
-            logging.warning(f"{self.clients[self.getByPrefix('mix')].device} is Unavailable")
+            mix.status = -4
+            logging.warning(f"{self.getByPrefix('mix').device} is Unavailable")
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
