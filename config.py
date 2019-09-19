@@ -12,6 +12,7 @@ btServerPort = 0
 loggingLevel = 10 # Debug
 serviceName = "pibox"
 serviceUUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+version = "0.1.190919"
 
 defaultConfig = """(
         BTClient(0, Device(config.phoneId)),

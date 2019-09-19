@@ -168,8 +168,8 @@ class BTServer(AbstractServer, BTClient):
             pass
 
 if __name__ == '__main__':
-    print("BT Server PiBox")
-    print("===============")
+    print("BT Server PiBox v"+config.version)
+    print("===========================")
     logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
     server = BTServer(
         eval(config.hardwareConfig),
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     if type(server.clients[-1]) is FileMixClient:
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
-    print("Dialog to devices")
+    print("Dialog with devices")
     server.dialogClients()
     print(server)
     print("Create BT server")
