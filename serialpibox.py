@@ -63,6 +63,7 @@ class SerialClient(AbstractClient):
             except:
                 pass
 
+
     def parseData(self, data:str):
         if "pho" in data:
             print(data)
@@ -85,9 +86,6 @@ class SerialClient(AbstractClient):
                 logging.warning(f"Change prefix {self.prefix}->{prefix}")
                 self.prefix = prefix
         return data
-
-
-
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)
