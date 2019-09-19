@@ -163,7 +163,7 @@ if __name__ == '__main__':
     print("===============")
     logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
     server = BTServer(
-        eval(config.mockConfig),
+        eval(config.hardwareConfig),
         config.btServerPort
     )
     server.clients[0].cb = server.phoneEvent
