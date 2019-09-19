@@ -1,12 +1,12 @@
 phoneId = "Phone"
 tempId = "00:0E:EA:CF:58:B8"
 tempPort = 1
-preasureId = "C8:14:51:08:8F:3A"
+preasureId = "0"
 preasurePort = "BTSPPServer"
 weightId = "/dev/ttyUSB0" #"COM5"
 weightPort = 0
-mixId = "COM3"
-mixPort = 0
+mixId = "C8:14:51:08:8F:3A"
+mixPort = "BTSPPServer"
 timeOutData = 60
 btServerPort = 0
 loggingLevel = 10 # Debug
@@ -26,7 +26,7 @@ hardwareConfig = """(
         BTClient(1, Device(config.tempId, config.tempPort)),
         BTClient(2, Device(config.preasureId, config.preasurePort)),
         SerialClient(3, Device(config.weightId)),
-        SerialClient(4, Device(config.mixId)),
+        BTClient(4, Device(config.mixId, config.mixPort)),
     )"""
 
 mockConfig = """(
