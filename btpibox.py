@@ -143,7 +143,7 @@ class BTServer(AbstractServer, BTClient):
             sock.send((str(data)+"\n").encode())
             #sock.write((str(data) + "\n").encode()) if Serial
             logging.warning(str(data) + "->" + str(self.clients[-1].device))
-            self.clients[-1].data = max(0, self.clients[-1].data)
+            self.clients[-1].data = 0
         except IOError:
             self.clients[-1].status = -4
             logging.warning(f"{self.clients[-1].device} is Down")
