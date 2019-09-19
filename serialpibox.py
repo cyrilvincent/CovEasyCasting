@@ -11,9 +11,11 @@ class SerialClient(AbstractClient):
 
     def __init__(self, prefix:str, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
         super().__init__(prefix, device, cb, timeout)
+        self.server = None
         SerialClient.nb += 1
         # if SerialClient.nb == 1:
         #     SerialClient.closeAllSerials()
+
 
 
     def connect(self):
@@ -83,9 +85,17 @@ class SerialClient(AbstractClient):
             if prefix != "":
                 data = data[4:]
             if prefix != self.prefix:
-                logging.warning(f"Change prefix {self.prefix}->{prefix}")
+                logging.warning(f"Switch prefix {self.prefix}<->{prefix}")
+                cb = self.cb
+                c = self.server.getByPrefix(prefix)
+                c.prefix = self.prefix
                 self.prefix = prefix
+                self.cb = c.cb
+                c.cb = cb
         return data
+
+
+
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)

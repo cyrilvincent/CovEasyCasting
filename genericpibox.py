@@ -29,6 +29,7 @@ class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
         self.cb = cb
         self.status = -2 # -2 = Not connected, -3 = Disconnected, -4 = Down, -1 = Connected, 0 = Dialog
         self.timeout = timeout
+        self.server = None
 
     @property
     def data(self):

@@ -96,6 +96,8 @@ class BTServer(AbstractServer, BTClient):
         self.uuid = uuid
         self.service = service
         self.sock:bluetooth.BluetoothSocket = None
+        for c in self.clients:
+            c.server = self
 
     def emit(self):
         while self.status > -2:
@@ -124,6 +126,7 @@ class BTServer(AbstractServer, BTClient):
 
     def dialogClients(self):
         for client in self.clients:
+            time.sleep(0.1)
             client.start()
 
     def createServer(self):
