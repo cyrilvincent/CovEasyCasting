@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo apt-get install blueman
+sudo apt-get install tio #tio /dev/ttyUSB0 -b 9600
 
 #https://stackoverflow.com/questions/36675931/bluetooth-btcommon-bluetootherror-2-no-such-file-or-directory
 #https://stackoverflow.com/questions/34599703/rfcomm-bluetooth-permission-denied-error-raspberry-pi
