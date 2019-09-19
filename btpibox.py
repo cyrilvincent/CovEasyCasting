@@ -143,13 +143,14 @@ class BTServer(AbstractServer, BTClient):
             sock.send((str(data)+"\n").encode())
             #sock.write((str(data) + "\n").encode()) if Serial
             logging.warning(str(data) + "->" + str(self.clients[-1].device))
-            self.clients[-1].data = 0
+            mix = self.getByPrefix("mix")
+            self.clients[self.getByPrefix("mix")].data = 0
         except IOError:
-            self.clients[-1].status = -4
-            logging.warning(f"{self.clients[-1].device} is Down")
+            self.clients[self.getByPrefix("mix")].status = -4
+            logging.warning(f"{self.clients[self.getByPrefix('mix')].device} is Down")
         except AttributeError:
-            self.clients[-1].status = -4
-            logging.warning(f"{self.clients[-1].device} is Unavailable")
+            self.clients[mix].status = -4
+            logging.warning(f"{self.clients[self.getByPrefix('mix')].device} is Unavailable")
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])

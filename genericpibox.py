@@ -67,11 +67,16 @@ class AbstractServer(metaclass=abc.ABCMeta):
 
     def makeJson(self):
         d = {}
-        d["phone"] = self._getData(self.clients[0])
-        d["temp"] = self._getData(self.clients[1])
-        d["preasure"] = self._getData(self.clients[2])
-        d["weight"] = self._getData(self.clients[3])
-        d["mix"] = self._getData(self.clients[4])
+        # d["phone"] = self._getData(self.clients[0])
+        # d["temp"] = self._getData(self.clients[1])
+        # d["preasure"] = self._getData(self.clients[2])
+        # d["weight"] = self._getData(self.clients[3])
+        # d["mix"] = self._getData(self.clients[4])
+        d["phone"] = self._getData(self.getByPrefix("pho"))
+        d["temp"] = self._getData(self.getByPrefix("tem"))
+        d["preasure"] = self._getData(self.getByPrefix("pre"))
+        d["weight"] = self._getData(self.getByPrefix("wei"))
+        d["mix"] = self._getData(self.getByPrefix("mix"))
         return json.dumps(d)
 
     def _getData(self,device):
@@ -79,6 +84,13 @@ class AbstractServer(metaclass=abc.ABCMeta):
             return device.status
         else:
             return device.data
+
+    def getByPrefix(self, prefix):
+        res = [c for c in self.clients if c.prefix == prefix]
+        if len(res) == 0:
+            logging.fatal(f"Prefix {prefix} not found")
+            sys.exit(1)
+        return res[0]
 
     @abc.abstractmethod
     def connectClients(self):...
