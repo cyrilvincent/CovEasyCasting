@@ -8,8 +8,8 @@ class SerialClient(AbstractClient):
 
     nb = 0
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
-        super().__init__(id,device,cb,timeout)
+    def __init__(self, prefix:str, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(prefix, device, cb, timeout)
         SerialClient.nb += 1
         # if SerialClient.nb == 1:
         #     SerialClient.closeAllSerials()
@@ -34,7 +34,7 @@ class SerialClient(AbstractClient):
                     data = self.sock.readline()
                     self.status = 0
                     logging.debug(str(self.device)+"->"+str(data))
-                    self.data = float(data)
+                    self.data = float(self.parseData(data.decode()))
                     self.cb(self.device, self.data)
                 except TypeError:
                     self.data = 0
@@ -61,6 +61,29 @@ class SerialClient(AbstractClient):
                 logging.info(str(d)+" closed")
             except:
                 pass
+
+    def parseData(self, data:str):
+        if data[3] == ":":
+            prefix = ""
+            if data.startswith("pho:"):
+                prefix = "pho"
+            elif data.startswith("tem:"):
+                prefix = "tem"
+            elif data.startswith("pre:"):
+                prefix = "pre"
+            elif data.startswith("wei:"):
+                prefix = "wei"
+            elif data.startswith("mix:"):
+                prefix = "mix"
+            if prefix != "":
+                data = data[4:]
+            if prefix != self.prefix:
+                logging.warning(f"Change prefix {self.prefix}->{prefix}")
+                self.prefix = prefix
+        return data
+
+
+
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)

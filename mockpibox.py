@@ -5,8 +5,8 @@ from genericpibox import *
 
 class MockClient(AbstractClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = 3600 * 24):
-        super().__init__(id,device,cb,timeout)
+    def __init__(self, prefix:str, device:Device, cb = lambda device, data : 0, timeout:int = 3600 * 24):
+        super().__init__(prefix, device, cb, timeout)
         self.data = float(device.id)
 
     def connect(self):
@@ -23,8 +23,8 @@ class MockClient(AbstractClient):
 
 class FileClient(AbstractClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
-        super().__init__(id,device,cb,timeout)
+    def __init__(self, prefix:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(prefix, device, cb, timeout)
         self.values = None
 
     def connect(self):
@@ -51,8 +51,8 @@ class FileClient(AbstractClient):
 
 class FileMixClient(FileClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
-        super().__init__(id,device,cb,timeout)
+    def __init__(self, prefix:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(prefix, device, cb, timeout)
         self.values = None
 
     def run(self) -> None:

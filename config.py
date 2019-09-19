@@ -22,11 +22,11 @@ defaultConfig = """(
     )"""
 
 hardwareConfig = """(
-        BTClient(0, Device(config.phoneId)),
-        BTClient(1, Device(config.tempId, config.tempPort)),
-        BTClient(2, Device(config.preasureId, config.preasurePort)),
-        SerialClient(3, Device(config.weightId)),
-        BTClient(4, Device(config.mixId, config.mixPort)),
+        BTClient("pho", Device(config.phoneId)),
+        BTClient("tem", Device(config.tempId, config.tempPort)),
+        BTClient("pre", Device(config.preasureId, config.preasurePort)),
+        SerialClient("wei", Device("weightId")),
+        BTClient("mix", Device(config.mixId, config.mixPort)),
     )"""
 
 mockConfig = """(

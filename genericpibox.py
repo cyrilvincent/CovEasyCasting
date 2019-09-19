@@ -19,9 +19,9 @@ class Device:
 
 class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+    def __init__(self, prefix:str, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
         super().__init__()
-        self.id = id
+        self.prefix = prefix
         self.device = device
         self.sock = None
         self._data = 0.0

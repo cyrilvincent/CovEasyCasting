@@ -15,8 +15,8 @@ from typing import Tuple
 
 class BTClient(SerialClient):
 
-    def __init__(self, id:int, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
-        super().__init__(id,device,cb,timeout)
+    def __init__(self, prefix:str, device:Device, cb = lambda device, data : 0, timeout:int = config.timeOutData):
+        super().__init__(prefix, device, cb, timeout)
 
     def connect(self):
         if self.device.id != config.phoneId:
@@ -58,7 +58,7 @@ class BTClient(SerialClient):
                         data = self.sock.readline()
                         self.status = 0
                         logging.debug(str(self.device)+"->"+str(data).strip())
-                        self.data = float(data)
+                        self.data = float(self.parseData(data))
                         self.cb(self.device, self.data)
                 except ValueError:
                     pass

@@ -27,8 +27,8 @@ void loop(void)
   R = R0*R;
   float temp = 1.0/(log(R/R0)/B+1/298.15)-273.15;
   temp -= 1;
-  Serial.println(temp);
-  blueToothSerial.println(temp);
+  Serial.println("wei:"+String(temp));
+  blueToothSerial.println("pho:"+String(temp));
   delay(1000);
 }
 
