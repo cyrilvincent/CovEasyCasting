@@ -141,6 +141,7 @@ class BTServer(AbstractServer, BTClient):
             data = int(data)
             sock = self.clients[-1].sock
             sock.send((str(data)+"\n").encode())
+            #sock.write((str(data) + "\n").encode()) if Serial
             logging.warning(str(data) + "->" + str(self.clients[-1].device))
         #self.clients[-1].data = 0
         except IOError:
@@ -164,7 +165,7 @@ class BTServer(AbstractServer, BTClient):
 if __name__ == '__main__':
     print("BT Server PiBox")
     print("===============")
-    logging.basicConfig(format='%(message)s', level=config.loggingLevel)
+    logging.basicConfig(format='%(message)s', level=config.loggingLevel+1)
     server = BTServer(
         eval(config.hardwareConfig),
         config.btServerPort
