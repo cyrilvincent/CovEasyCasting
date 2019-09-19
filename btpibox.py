@@ -146,6 +146,9 @@ class BTServer(AbstractServer, BTClient):
         except IOError:
             self.clients[-1].status = -4
             logging.warning(f"{self.clients[-1].device} is Down")
+        except AttributeError:
+            self.clients[-1].status = -4
+            logging.warning(f"{self.clients[-1].device} is Unavailable")
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
