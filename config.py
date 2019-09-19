@@ -25,7 +25,7 @@ hardwareConfig = """(
         BTClient("pho", Device(config.phoneId)),
         BTClient("tem", Device(config.tempId, config.tempPort)),
         BTClient("pre", Device(config.preasureId, config.preasurePort)),
-        SerialClient("wei", Device("weightId")),
+        SerialClient("wei", Device(config.weightId)),
         BTClient("mix", Device(config.mixId, config.mixPort)),
     )"""
 
