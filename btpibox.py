@@ -156,6 +156,16 @@ class BTServer(AbstractServer, BTClient):
             mix.status = -4
             logging.warning(f"{self.getByPrefix('mix').device} is Unavailable")
 
+    def run(self) -> None:
+        print("Dialog with devices")
+        server.dialogClients()
+        print(server)
+        print("Create BT server")
+        server.createServer()
+        print(server)
+        print("Listening")
+        server.listen()
+
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
 
@@ -179,14 +189,8 @@ if __name__ == '__main__':
     if type(server.clients[-1]) is FileMixClient:
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
-    print("Dialog with devices")
-    server.dialogClients()
-    print(server)
-    print("Create BT server")
-    server.createServer()
-    print(server)
-    print("Listening")
-    server.listen()
+    server.start()
+    server.join()
 
 
 

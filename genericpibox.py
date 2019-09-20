@@ -77,7 +77,7 @@ class AbstractServer(metaclass=abc.ABCMeta):
         d["temp"] = self._getData(self.getByPrefix("tem"))
         d["preasure"] = self._getData(self.getByPrefix("pre"))
         d["weight"] = self._getData(self.getByPrefix("wei"))
-        d["mix"] = self._getData(self.getByPrefix("mix"))
+        d["mix"] = self.convertIntToBinary(self._getData(self.getByPrefix("mix")))
         return json.dumps(d)
 
     def _getData(self,device):
@@ -93,6 +93,15 @@ class AbstractServer(metaclass=abc.ABCMeta):
             return self.clients[["pho","tem","wei","pre","mix"].index(prefix)]
         else:
             return res[0]
+
+    def convertIntToBinary(self, nb:int)->int:
+        res = -1
+        if nb >= 0 and nb < 32:
+            try:
+                res = int(bin(int(nb) + 32)[2:])
+            except TypeError:
+                pass
+        return res
 
     @abc.abstractmethod
     def connectClients(self):...

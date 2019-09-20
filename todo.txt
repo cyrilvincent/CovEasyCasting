@@ -1,2 +1,5 @@
 cordova plugin add cordova-plugin-bluetooth-serial
 https://www.npmjs.com/package/cordova-plugin-bluetooth-serial
+
+Fix tty
+https://psuchefs.wordpress.com/2015/01/19/how-to-fix-usb-devices-serial-ttyusb/

@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://www.youtube.com/watch?v=BzygRfxrgo8
 
 for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
     (

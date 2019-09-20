@@ -1,0 +1,3 @@
+Found here : https://psuchefs.wordpress.com/2015/01/19/how-to-fix-usb-devices-serial-ttyusb/
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="0001", SYMLINK+="ttySEEEDUINO"
