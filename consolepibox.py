@@ -12,7 +12,7 @@ class ConsoleServer(BTServer):
 
     def emit(self):
         logging.info("Emiting")
-        while True:
+        while not self.stop:
             json = self.makeJson()
             print(json)
             time.sleep(config.sleep)
@@ -23,6 +23,21 @@ class ConsoleServer(BTServer):
     def listen(self):
         self.status = 0
         self.emit()
+
+    def run(self) -> None:
+        print("Dialog to devices")
+        server.dialogClients()
+        print(server)
+        print("Listening")
+        server.listen()
+
+    def end(self):
+        print("Stopping")
+        for c in self.clients:
+            c.stop = True
+        time.sleep(1)
+        self.stop = True
+        time.sleep(10)
 
     def __repr__(self):
         return "ConsoleServer "+str(self.clients[0].device)+"<-Console<-"+str(self.clients[1:])
@@ -37,12 +52,15 @@ if __name__ == '__main__':
     if type(server.clients[-1]) is FileMixClient:
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
-    print("Dialog to devices")
-    server.dialogClients()
-    print(server)
-    print("Listening")
-    server.listen()
-    print("Stop")
+    server.start()
+    print("Press Enter to stop")
+    input()
+    server.end()
+    print("Stopped")
+    time.sleep(2)
+    import os
+    os._exit(0)
+
 
 
 

@@ -17,7 +17,7 @@ class MockClient(AbstractClient):
         if self.status < -1:
             self.connect()
         self.status = 0
-        while(True):
+        while not self.stop:
             logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 
@@ -43,7 +43,7 @@ class FileClient(AbstractClient):
         if self.status < -1:
             self.connect()
         self.status = 0
-        while(True):
+        while not self.stop:
             for row in self.values:
                 self.data = float(row["value"])
                 logging.debug(str(self.device)+"->"+str(self.data))
@@ -59,7 +59,7 @@ class FileMixClient(FileClient):
         if self.status < -1:
             self.connect()
         self.status = 0
-        while(True):
+        while not self.stop:
             logging.debug(str(self.device)+"->"+str(self.data))
             time.sleep(1)
 

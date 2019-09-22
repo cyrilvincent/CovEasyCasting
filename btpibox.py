@@ -54,7 +54,6 @@ class BTClient(SerialClient):
             while self.status >= -1 and not self.stop:
                 try:
                     if self.sock != None:
-                        #data = self.sock.recv(1024)
                         data = self.sock.readline()
                         self.status = 0
                         logging.debug(str(self.device)+"->"+str(data).strip())
@@ -120,16 +119,21 @@ class BTServer(AbstractServer, BTClient):
             self.sock.close()
         except:
             pass
+        print(f"{self} stopped")
         sys.exit(0)
 
     def listen(self):
         while not self.stop:
-            self.clients[0].status = min(-2, self.status)
-            print("Waiting for connection...")
-            self.clients[0].sock, clientInfo = self.sock.accept()
-            self.status = -1
-            print(f"Accepted connection from {clientInfo}")
-            self.emit()
+            try:
+                self.clients[0].status = min(-2, self.status)
+                print("Waiting for connection...")
+                self.clients[0].sock, clientInfo = self.sock.accept()
+                self.status = -1
+                print(f"Accepted connection from {clientInfo}")
+                self.emit()
+            except OSError as oe:
+                if not self.stop:
+                    logging.error(oe)
 
     def connectClients(self):
         for client in self.clients:
@@ -180,13 +184,12 @@ class BTServer(AbstractServer, BTClient):
 
     def end(self):
         print("Stopping")
+        self.sock.settimeout(1)
         for c in self.clients:
             c.stop = True
-        time.sleep(11)
         self.stop = True
-        print(f"{self} stopped")
-        c.stop = True
-
+        time.sleep(10)
+        self.sock.close()
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
@@ -215,14 +218,9 @@ if __name__ == '__main__':
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     server.start()
-    print("Press enter top stop")
+    print("Press 2x Enter to stop")
     input()
     server.end()
-    time.sleep(2)
-    print("Stopped")
-    time.sleep(1)
-    import os
-    os._exit(0)
 
 
 
