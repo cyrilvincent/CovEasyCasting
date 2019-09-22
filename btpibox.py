@@ -48,10 +48,10 @@ class BTClient(SerialClient):
             self.status = -4
 
     def run(self) -> None:
-        while(True):
+        while not self.stop:
             if self.status < -1:
                 self.connect()
-            while(self.status >= -1):
+            while self.status >= -1 and not self.stop:
                 try:
                     if self.sock != None:
                         #data = self.sock.recv(1024)
@@ -71,6 +71,12 @@ class BTClient(SerialClient):
             except:
                 pass
             time.sleep(10)
+        print(f"{self} stopped")
+        try:
+            self.sock.close()
+        except:
+            pass
+        sys.exit(0)
 
     def readline1024(self):
         s = ""
@@ -100,7 +106,7 @@ class BTServer(AbstractServer, BTClient):
             c.server = self
 
     def emit(self):
-        while self.status > -2:
+        while self.status > -2 and not self.stop:
             try:
                 json = self.makeJson()
                 print(f"Sending {json}")
@@ -109,10 +115,15 @@ class BTServer(AbstractServer, BTClient):
             except IOError as ex:
                 self.status = -3
                 print("Client disconnected")
-            time.sleep(1)
+            time.sleep(config.sleep)
+        try:
+            self.sock.close()
+        except:
+            pass
+        sys.exit(0)
 
     def listen(self):
-        while True:
+        while not self.stop:
             self.clients[0].status = min(-2, self.status)
             print("Waiting for connection...")
             self.clients[0].sock, clientInfo = self.sock.accept()
@@ -144,9 +155,10 @@ class BTServer(AbstractServer, BTClient):
         try:
             data = int(data)
             mix = self.getByPrefix("mix")
-            sock = mix.sock
-            sock.send((str(data)+"\n").encode())
-            #sock.write((str(data) + "\n").encode()) if Serial
+            if type(mix.sock) == bluetooth.BluetoothSocket:
+                mix.sock.send((str(data)+"\n").encode())
+            else:
+                mix.sock.write((str(data) + "\n").encode())
             logging.warning(str(data) + "->" + str(mix.device))
             mix.data = 0
         except IOError:
@@ -166,6 +178,16 @@ class BTServer(AbstractServer, BTClient):
         print("Listening")
         server.listen()
 
+    def end(self):
+        print("Stopping")
+        for c in self.clients:
+            c.stop = True
+        time.sleep(11)
+        self.stop = True
+        print(f"{self} stopped")
+        c.stop = True
+
+
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
 
@@ -173,7 +195,10 @@ class BTServer(AbstractServer, BTClient):
         try:
             self.sock.close()
             for c in self.clients:
-                del c
+                try:
+                    del c
+                except:
+                    pass
         except:
             pass
 
@@ -190,7 +215,16 @@ if __name__ == '__main__':
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     server.start()
-    server.join()
+    print("Press enter top stop")
+    input()
+    server.end()
+    time.sleep(2)
+    print("Stopped")
+    time.sleep(1)
+    import os
+    os._exit(0)
+
+
 
 
 

@@ -15,7 +15,7 @@ class ConsoleServer(BTServer):
         while True:
             json = self.makeJson()
             print(json)
-            time.sleep(1)
+            time.sleep(config.sleep)
 
     def createServer(self):
         pass

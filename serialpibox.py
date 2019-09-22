@@ -29,10 +29,10 @@ class SerialClient(AbstractClient):
             logging.warning(f"{self.device} is Down")
 
     def run(self) -> None:
-        while True:
+        while not self.stop:
             if self.status < -1:
                 self.connect()
-            while(self.status >= -1):
+            while self.status >= -1 and not self.stop:
                 try:
                     data = self.sock.readline()
                     self.status = 0
@@ -53,6 +53,11 @@ class SerialClient(AbstractClient):
             except:
                 pass
             time.sleep(10)
+        print(f"{self} stopped")
+        try:
+            self.sock.close()
+        except:
+            pass
 
     @staticmethod
     def closeAllSerials():
@@ -64,7 +69,6 @@ class SerialClient(AbstractClient):
                 logging.info(str(d)+" closed")
             except:
                 pass
-
 
     def parseData(self, data:str):
         if "pho" in data:
@@ -93,9 +97,6 @@ class SerialClient(AbstractClient):
                 self.cb = c.cb
                 c.cb = cb
         return data
-
-
-
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)

@@ -1,4 +1,4 @@
-from notused.wifipibox import *
+from wifipibox import *
 from typing import Tuple
 import flask
 import flask_socketio as io
@@ -23,8 +23,8 @@ class RestServer(WifiServer):
                 self.status = 0
             except IOError as ex:
                 self.status = -4
-                time.sleep(9)
-            time.sleep(1)
+                time.sleep(10)
+            time.sleep(config.sleep)
 
     def createServer(self):
         logging.info(f"Starting server {self.device}")
@@ -37,7 +37,7 @@ class RestServer(WifiServer):
 app = flask.Flask(__name__)
 socketio = io.SocketIO(app, async_mode=None)
 
-server = RestServer(eval(config.defaultConfig), socketio, 80)
+server = RestServer(eval(config.hardwareConfig), socketio, 80)
 
 print(server)
 print("Dialog to devices")
@@ -59,7 +59,7 @@ def test():
 def hearbeat():
     for i in range(10):
         io.emit('response',"ok")
-        time.sleep(1)
+        time.sleep(config.sleep)
 
 @socketio.on("start", namespace="/pibox")
 def start():
@@ -67,7 +67,8 @@ def start():
 
 @socketio.on('disconnect', namespace='/pibox')
 def disconnect():
-    server.stop()
+    #server.stop()
+    pass
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)

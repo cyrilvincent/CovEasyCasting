@@ -26,7 +26,7 @@ class WifiServer(BTServer):
                 self.status = 0
             except IOError as ex:
                 self.status = -4
-            time.sleep(1)
+            time.sleep(config.sleep)
 
     def createServer(self):
         logging.info(f"Server {self.device} Ok")

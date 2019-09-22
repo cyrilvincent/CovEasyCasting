@@ -30,6 +30,7 @@ class AbstractClient(threading.Thread, metaclass=abc.ABCMeta):
         self.status = -2 # -2 = Not connected, -3 = Disconnected, -4 = Down, -1 = Connected, 0 = Dialog
         self.timeout = timeout
         self.server = None
+        self.stop = False
 
     @property
     def data(self):
@@ -70,13 +71,13 @@ class AbstractServer(metaclass=abc.ABCMeta):
         d = {}
         # d["phone"] = self._getData(self.clients[0])
         # d["temp"] = self._getData(self.clients[1])
-        # d["preasure"] = self._getData(self.clients[2])
+        # d["pres"] = self._getData(self.clients[2])
         # d["weight"] = self._getData(self.clients[3])
         # d["mix"] = self._getData(self.clients[4])
-        d["phone"] = self._getData(self.getByPrefix("pho"))
-        d["temp"] = self._getData(self.getByPrefix("tem"))
-        d["preasure"] = self._getData(self.getByPrefix("pre"))
-        d["weight"] = self._getData(self.getByPrefix("wei"))
+        d["pho"] = self._getData(self.getByPrefix("pho"))
+        d["tem"] = self._getData(self.getByPrefix("tem"))
+        d["pre"] = self._getData(self.getByPrefix("pre"))
+        d["wei"] = self._getData(self.getByPrefix("wei"))
         d["mix"] = self.convertIntToBinary(self._getData(self.getByPrefix("mix")))
         return json.dumps(d)
 

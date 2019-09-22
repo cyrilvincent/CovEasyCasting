@@ -5,9 +5,9 @@ import time
 
 print("Test mix device")
 print("===============")
-print("Closing ports...")
-SerialClient.closeAllSerials()
-client = SerialClient(3, Device(config.mixId))
+#print("Closing ports...")
+#SerialClient.closeAllSerials()
+client = SerialClient("mix", Device(config.mixId))
 client.connect()
 for i in range(6):
     print("Sending "+str(i)+"...")
