@@ -1,8 +1,15 @@
+/*
+BN: Arduino/Genuino Uno
+VID: 0x2341
+PID: 0x0043
+SN: 55731323935351E051B0
+*/
+
 #include <SoftwareSerial.h>
 
-#define RxD 6
-#define TxD 7
-
+#define RxD 7
+#define TxD 6
+SoftwareSerial blueToothSerial(RxD,TxD);
 int i = 0;
 
 void setup() {
@@ -10,18 +17,20 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Starting Weight mock BT");
   blueToothSerial.begin(9600);
-  //setupBlueToothConnection();
+  setupBlueToothConnection();
   delay(1000);
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    Serial.println("wei:"+String(2000 + i++ % 1000));
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(200);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(1800);
-  }
+  int v = 2000 + i;
+  Serial.println("wei:"+String(v));
+  digitalWrite(LED_BUILTIN, HIGH);
+  blueToothSerial.println("wei:"+String(v));
+  delay(200);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(1800);
+  i++;
+  i %= 1000;
 }
 
 void setupBlueToothConnection()
