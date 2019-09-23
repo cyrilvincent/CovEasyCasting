@@ -218,8 +218,11 @@ if __name__ == '__main__':
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     server.start()
-    print("Press 2x Enter to stop")
-    input()
+    try:
+        input("Press 2x Enter to stop")
+    except KeyboardInterrupt:
+        pass
+        # sudo apt-get screen
     server.end()
 
 

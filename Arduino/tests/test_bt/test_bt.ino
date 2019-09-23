@@ -31,20 +31,15 @@ void setupBlueToothConnection()
   // http://wiki.seeedstudio.com/Grove-Serial_Bluetooth_v3.0/
   // See also https://www.teachmemicro.com/arduino-bluetooth/
   Serial.println("Setup BT");
-  blueToothSerial.begin(9600);  
   blueToothSerial.print("AT");
-  delay(400); 
+  delay(400);
   blueToothSerial.print("AT+DEFAULT"); // Restore all setup value to factory setup
-  delay(2000); 
+  delay(2000);
   blueToothSerial.print("AT+NAMEtestbt"); // set the bluetooth name as "SeeedMaster" ,the length of bluetooth name must less than 12 characters.
   delay(400);
-  //blueToothSerial.print("AT+ROLEM"); // set the bluetooth work in master mode
-  //delay(400); 
-  blueToothSerial.print("AT+PIN0000"); // PIN Code default 1234           
-  delay(400);    
-  blueToothSerial.print("AT+AUTH1");          
+  blueToothSerial.print("AT+PIN1234"); // PIN Code default 1234
   delay(400);
-  //blueToothSerial.print("AT+CLEAR"); // Clear connected device mac address
-  //delay(400);   
+  blueToothSerial.print("AT+AUTH0");   // No Auth
+  delay(400);
   blueToothSerial.flush();
 }
