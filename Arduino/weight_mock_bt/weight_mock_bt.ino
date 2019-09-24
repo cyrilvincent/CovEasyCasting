@@ -3,11 +3,13 @@ BN: Arduino/Genuino Uno
 VID: 0x2341
 PID: 0x0043
 SN: 55731323935351E051B0
+Windows: COM8
+Raspian:
 */
 
 #include <SoftwareSerial.h>
 
-#define RxD 7
+#define RxD 7 // Inverse Rx and Tx if BT Grove
 #define TxD 6
 SoftwareSerial blueToothSerial(RxD,TxD);
 int i = 0;
