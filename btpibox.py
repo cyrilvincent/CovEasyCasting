@@ -190,6 +190,7 @@ class BTServer(AbstractServer, BTClient):
         self.stop = True
         time.sleep(10)
         self.sock.close()
+        time.sleep(5)
 
     def __repr__(self):
         return "BTServer "+str(self.clients[0].device)+"<-"+str(self.device)+"<-"+str(self.clients[1:])
@@ -224,6 +225,9 @@ if __name__ == '__main__':
         pass
         # sudo apt-get screen
     server.end()
+    os._exit(0)
+
+
 
 
 
