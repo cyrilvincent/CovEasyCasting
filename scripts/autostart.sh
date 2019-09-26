@@ -8,7 +8,8 @@
 #To enable the service
 #sudo systemctl enable pibox.service
 cd /home/pi/pibox
-git pull
+mv ../pibox.log ../pibox.bak
+git pull > ../pibox.log
 if screen -ls | grep -q "pibox"; then
 screen -S pibox ./btpibox.py
 else
