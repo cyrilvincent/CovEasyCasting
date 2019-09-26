@@ -12,7 +12,7 @@ mv ../pibox.log ../pibox.bak
 git pull > ../pibox.log
 if screen -ls | grep -q "pibox"; then
 echo Start screen
-screen -S pibox ./btpibox.py
+screen -x pibox
 else
 echo Start Pibox
 ./btpibox.py
