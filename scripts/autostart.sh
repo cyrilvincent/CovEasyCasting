@@ -15,6 +15,6 @@ echo Start screen
 screen -x pibox
 else
 echo Start Pibox
-./btpibox.py
+screen -S pibox ./btpibox.py
 fi
 # use with screen -x pibox
