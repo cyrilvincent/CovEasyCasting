@@ -1,3 +1,6 @@
 Found here : https://psuchefs.wordpress.com/2015/01/19/how-to-fix-usb-devices-serial-ttyusb/
 
 SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="0001", SYMLINK+="ttySEEEDUINO"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", ATTRS{serial}=="85730313936351410222", SYMLINK+="ttyArduinoMix"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", ATTRS{serial}=="857303139363515181D2", SYMLINK+="ttyArduinoPre"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", ATTRS{serial}=="55731323935351E051B0", SYMLINK+="ttyArduinoWei"

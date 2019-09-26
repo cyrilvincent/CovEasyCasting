@@ -4,7 +4,7 @@ VID: 0x2341
 PID: 0x0043
 SN: 55731323935351E051B0
 Windows: COM8
-Raspian:
+Raspian: /dev/ttyArduinoWei
 */
 
 #include <SoftwareSerial.h>

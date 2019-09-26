@@ -1,3 +1,12 @@
+/*
+BN: Arduino/Genuino Uno
+VID: 0x2341
+PID: 0x0043
+SN: 857303139363515181D2
+Windows: COM8
+Raspian: /dev/ttyArduinoPre
+ */
+
 #include "Seeed_BME280.h"
 
 // Plug on port I2C

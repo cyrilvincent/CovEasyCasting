@@ -31,7 +31,7 @@ class BTClient(SerialClient):
                 self.status = -1
             except IOError:
                 self.status = -4
-                logging.error(str(self.device) + "is Down")
+                logging.error(f"{self.device} is Down")
             except TypeError:
                 pass
         else:

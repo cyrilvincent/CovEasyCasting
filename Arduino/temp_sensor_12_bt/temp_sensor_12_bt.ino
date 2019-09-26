@@ -1,3 +1,12 @@
+/*
+BN: Seeeduino
+VID: 0x10c4
+PID: 0xea60
+SN: 0001
+Windows: COM5
+Raspian: /dev/ttySEEEDUINO
+ */
+
 #include <SoftwareSerial.h>
 #include <math.h>
 

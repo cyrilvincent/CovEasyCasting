@@ -1,4 +1,6 @@
 #!/bin/bash
+# Put SSH file at the root of the SDCart
+# From windows ssh raspberrypi.local
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install -y tightvncserver

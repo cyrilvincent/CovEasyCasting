@@ -1,19 +1,17 @@
 #!/bin/bash
+#cp /home/pi/pibox/scripts/config/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart
+#or
 #sudo cp pibox.service /etc/systemd/system/pibox.service
 #sudo systemctl daemon-reload
 #sudo systemctl start pibox.service
 #sudo systemctl stop pibox.service
 #To enable the service
 #sudo systemctl enable pibox.service
-cp /home/pi/pibox.log /home/pi/pibox.bak
-echo AutoStart PiBox > /home/pi/pibox.log
-echo Kill previous version >> /home/pi/pibox.log
-pkill -9 python3 >> /home/pi/pibox.log
 cd /home/pi/pibox
-sleep 5
-echo PiBox update >> /home/pi/pibox.log
-#git reset --hard HEAD
-git pull >> /home/pi/pibox.log
-sleep 1
-echo Starting PiBox >> /home/pi/pibox.log
-python3 consolepibox.py &>> /home/pi/pibox.log
+git pull
+if screen -ls | grep -q "pibox"; then
+screen -S pibox ./btpibox.py
+else
+./btpibox.py
+fi
+# use with screen -x pibox
