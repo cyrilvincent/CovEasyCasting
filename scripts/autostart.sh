@@ -11,10 +11,10 @@ cd /home/pi/pibox
 mv ../pibox.log ../pibox.bak
 git pull > ../pibox.log
 if screen -ls | grep -q "pibox"; then
-echo OK
-#screen -S pibox ./btpibox.py
+echo Start screen
+screen -S pibox ./btpibox.py
 else
-echo KO
-#./btpibox.py
+echo Start Pibox
+./btpibox.py
 fi
 # use with screen -x pibox
