@@ -207,6 +207,18 @@ class BTServer(AbstractServer, BTClient):
         except:
             pass
 
+class ConsoleDisplay(threading.Thread):
+
+    def __init__(self, server):
+        super().__init__()
+        self.server:BTServer = server
+        self.stop = False
+
+    def run(self) -> None:
+        while not self.stop:
+            print(server.makeJson())
+            time.sleep(10)
+
 if __name__ == '__main__':
     print("BT Server PiBox v"+config.version)
     print("===========================")
@@ -220,10 +232,13 @@ if __name__ == '__main__':
         server.clients[0].cb = server.clients[-1].phoneEvent
     print(server)
     server.start()
+    console = ConsoleDisplay(server)
+    console.start()
     try:
         input("Press Enter to stop\n")
     except KeyboardInterrupt:
         pass
+    console.stop = True
     server.end()
     import os
     os._exit(0)
