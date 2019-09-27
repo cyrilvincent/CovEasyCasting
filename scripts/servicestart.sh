@@ -9,4 +9,5 @@ cd /home/pi/pibox
 echo start > ../servicestart.pibox
 mv ../pibox.log ../pibox.bak
 git pull > ../pibox.log
-screen -S pibox ./btpibox.py
+#screen -S pibox ./btpibox.py
+python3 btpibox.py
