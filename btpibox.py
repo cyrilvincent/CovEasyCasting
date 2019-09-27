@@ -216,8 +216,11 @@ class ConsoleDisplay(threading.Thread):
 
     def run(self) -> None:
         while not self.stop:
-            print(server.makeJson())
-            time.sleep(10)
+            try:
+                print(server.makeJson())
+            except:
+                pass
+            time.sleep(60)
 
 if __name__ == '__main__':
     print("BT Server PiBox v"+config.version)
