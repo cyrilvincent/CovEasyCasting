@@ -115,12 +115,13 @@ class BTServer(AbstractServer, BTClient):
                 self.status = -3
                 print("Client disconnected")
             time.sleep(config.sleep)
-        try:
-            self.sock.close()
-        except:
-            pass
-        print(f"{self} stopped")
-        sys.exit(0)
+        if self.stop:
+            print(f"{self} stopped")
+            try:
+                self.sock.close()
+            except:
+                pass
+            sys.exit(0)
 
     def listen(self):
         while not self.stop:
