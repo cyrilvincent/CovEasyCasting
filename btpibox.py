@@ -221,7 +221,7 @@ if __name__ == '__main__':
     print(server)
     server.start()
     try:
-        input("Press Enter to stop")
+        input("Press Enter to stop\n")
     except KeyboardInterrupt:
         pass
     server.end()
