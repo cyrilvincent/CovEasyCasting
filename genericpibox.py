@@ -76,8 +76,9 @@ class AbstractServer(metaclass=abc.ABCMeta):
         # d["mix"] = self._getData(self.clients[4])
         d["pho"] = int(self._getData(self.getByPrefix("pho")))
         d["tem"] = self._getData(self.getByPrefix("tem"))
-        d["pre"] = self._getData(self.getByPrefix("pre"))
-        d["wei"] = self._getData(self.getByPrefix("wei"))
+        pre = self._getData(self.getByPrefix("pre"))
+        d["pre"] = pre/100 if pre > 0 else pre
+        d["wei"] = int(self._getData(self.getByPrefix("wei")))
         # d["mix"] = self.convertIntToBinary(self._getData(self.getByPrefix("mix")))
         d["mix"] = int(self._getData(self.getByPrefix("mix")))
         return json.dumps(d)
