@@ -116,11 +116,11 @@ class BTServer(AbstractServer, BTClient):
                 print("Client disconnected")
             time.sleep(config.sleep)
         if self.stop:
-            print(f"{self} stopped")
             try:
                 self.sock.close()
             except:
                 pass
+            print(f"{self} stopped")
             sys.exit(0)
 
     def listen(self):
@@ -221,10 +221,9 @@ if __name__ == '__main__':
     print(server)
     server.start()
     try:
-        input("Press 2x Enter to stop")
+        input("Press Enter to stop")
     except KeyboardInterrupt:
         pass
-        # sudo apt-get screen
     server.end()
     import os
     os._exit(0)
