@@ -7,7 +7,7 @@
 #sudo systemctl enable pibox.service
 cd /home/pi/pibox
 echo start > ../servicestart.pibox
-mv ../pibox.log ../pibox.bak
-git pull > ../pibox.log
+#mv ../pibox.log ../pibox.bak
+#git pull > ../pibox.log
 #screen -S pibox ./btpibox.py
-python3 btpibox.py
+#python3 btpibox.py
