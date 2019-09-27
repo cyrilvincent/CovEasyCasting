@@ -32,6 +32,7 @@ void setup() {
 void loop() {
   if(Serial.available() > 0) {
     lcd.setRGB(0,255,0);
+    delay(100);
     int data = Serial.readStringUntil('\n').toInt();
     digitalWrite(LED_BUILTIN, HIGH);
     char s[8];

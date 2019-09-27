@@ -38,7 +38,7 @@ void loop(void)
   temp -= 1;
   Serial.println("tem:"+String(temp));
   blueToothSerial.println("tem:"+String(temp));
-  delay(1000);
+  delay(3000);
 }
 
 void setupBlueToothConnection()

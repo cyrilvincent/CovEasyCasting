@@ -19,7 +19,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Starting Weight mock BT");
   blueToothSerial.begin(9600);
-  setupBlueToothConnection();
+  //setupBlueToothConnection();
   delay(1000);
 }
 
