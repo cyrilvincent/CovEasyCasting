@@ -9,6 +9,7 @@ sudo apt-get install x11vnc # pour Windows https://www.realvnc.com/fr/connect/do
 sudo cp /home/pi/pibox/scripts/config/x11vnc.service /lib/systemd/system/x11vnc.service
 sudo systemctl daemon-reload
 sudo systemctl enable x11vnc.service
+sudo systemctl start x11vnc.service
 
 git clone --depth 1 https://github.com/cyrilvincent/CovEasyCasting.git pibox
 
