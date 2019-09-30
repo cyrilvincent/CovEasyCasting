@@ -5,7 +5,8 @@ PID: 0xea60
 SN: 0001
 Windows: COM5
 Raspian: /dev/ttySEEEDUINO
- */
+MAC: 00:0E:EA:CF:58:B8
+*/
 
 #include <SoftwareSerial.h>
 #include <math.h>

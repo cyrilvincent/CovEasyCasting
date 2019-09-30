@@ -5,6 +5,7 @@ PID: 0x0043
 SN: 55731323935351E051B0
 Windows: COM8
 Raspian: /dev/ttyArduinoWei
+MAC: 00:0E:EA:CF:47:5A
 */
 
 #include <SoftwareSerial.h>
