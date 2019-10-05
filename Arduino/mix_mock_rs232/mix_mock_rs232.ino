@@ -7,8 +7,7 @@ Windows: COM12
 Raspian: /dev/ttyArduinoMix
 RS232VID: 0x067b
 RS232PID: 0x2303
-RS232SN: 0000:01:00.0
-RS232dev: /dev/ttyArduinoRS232
+RS232dev: /dev/ttyArduinoRS
 */
 
 #include <Wire.h>
