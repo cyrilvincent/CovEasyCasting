@@ -5,7 +5,11 @@ PID: 0x0043
 SN: 85730313936351410222
 Windows: COM12
 Raspian: /dev/ttyArduinoMix
- */
+RS232VID: 0x067b
+RS232PID: 0x2303
+RS232SN: 0000:01:00.0
+RS232dev: /dev/ttyArduinoRS232
+*/
 
 #include <Wire.h>
 #include "rgb_lcd.h"
@@ -35,10 +39,12 @@ void setup() {
 }
 
 void loop() {
-  if(Serial.available() > 0) {
+  //if(Serial.available() > 0) {
+  if(mySerial.available() > 0) {
     lcd.setRGB(0,255,0);
     delay(100);
-    int data = Serial.readStringUntil('\n').toInt();
+    //int data = Serial.readStringUntil('\n').toInt();
+    int data = mySerial.readStringUntil('\n').toInt();
     digitalWrite(LED_BUILTIN, HIGH);
     char s[8];
     itoa(data + 32,s,2);
