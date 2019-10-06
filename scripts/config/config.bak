@@ -2,25 +2,25 @@ phoneId = "Phone"
 tempId = "00:0E:EA:CF:58:B8"
 tempPort = 1
 pressureId = "/dev/ttyArduinoPre"
-pressurePort = 1
+pressurePort = 0
 weightId = "00:0E:EA:CF:47:5A"
 weightPort = 1
-mixId = "/dev/ttyArduinoMix"
+mixId = "/dev/ttyArduinoRS"
 mixPort = 0
 timeOutData = 60
 btServerPort = 0
 loggingLevel = 10 # Debug
 serviceName = "pibox"
 serviceUUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-version = "0.1.190930"
+version = "0.1.190927"
 sleep = 2
 
 defaultConfig = """(
-        BTClient("pho", Device(config.phoneId)),
-        BTClient("tem", Device(config.tempId, config.tempPort)),
-        SerialClient("pre", Device(config.pressureId)),
-        BTClient("wei", Device(config.weightId, config.weightPort)),
-        SerialClient("mix", Device(config.mixId), timeout=3600),
+        BTClient(0, Device(config.phoneId)),
+        BTClient(1, Device(config.tempId, config.tempPort)),
+        MockClient(2, Device(1000)),
+        SerialClient(3, Device(config.weightId)),
+        SerialClient(4, Device(config.mixId), timeout=3600),
     )"""
 
 hardwareConfig = """(
@@ -32,17 +32,17 @@ hardwareConfig = """(
     )"""
 
 mockConfig = """(
-        MockClient("pho", Device(0)),
-        FileClient("tem", Device("data/temperature.csv")),
-        MockClient("pre", Device(1000)),
-        MockClient("wei", Device(2500)),
-        FileMixClient("mix", Device("data/mix.csv"), timeout=3600)
+        MockClient(0, Device(0)),
+        FileClient(1, Device("data/temperature.csv")),
+        MockClient(2, Device(1000)),
+        MockClient(3, Device(2500)),
+        FileMixClient(4, Device("data/mix.csv"), timeout=3600)
     )"""
 
 mockExceptPhoneConfig = """(
-        BTClient("pho", Device(config.phoneId, config.phonePort)),
-        FileClient("tem", Device("data/temperature.csv")),
-        MockClient("pre", Device(1000)),
-        MockClient("wei", Device(2500)),
-        FileMixClient("mix", Device("data/mix.csv"), timeout=3600)
+        BTClient(0, Device(config.phoneId, config.phonePort)),
+        FileClient(1, Device("data/temperature.csv")),
+        MockClient(2, Device(1000)),
+        MockClient(3, Device(2500)),
+        FileMixClient(4, Device("data/mix.csv"), timeout=3600)
     )"""

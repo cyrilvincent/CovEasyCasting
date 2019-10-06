@@ -11,27 +11,23 @@ def nslookup(ip):
     p = os.popen("nslookup " + ip)
     s = p.read()
     res = "raspberry" in s
+    #res = "Nom" in s
     p.close()
     return res
 
 
 print("TestPing")
 print("========")
-#r = list(range(0,255))
 prefix = "192.168.1."
-r = list(range(80,86))
-print(f"Ping {prefix}{r}")
+r = list(range(2,254))
+print(f"Nslookup {prefix}{r}")
 res = []
 for i in r:
     host = prefix+str(i)
-    print(f"Ping {host}")
-    if ping(host):
-        print("Pinged")
-        res.append(host)
-print(f"Nslookup {res}")
-for i in res:
-    if nslookup(i):
+    if nslookup(host):
         print(f"Found {i}")
+        res.append(host)
+print(res)
 
 
 
