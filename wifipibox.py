@@ -43,7 +43,7 @@ class WifiServer(BTServer):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=config.loggingLevel)
-    server = WifiServer(eval(config.defaultConfig),"http://www.null.com:80","/")
+    server = WifiServer(eval(config.hardwareConfig),"http://www.null.com:80","/")
     print(server)
     print("Dialog to devices")
     server.dialogClients()

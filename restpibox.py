@@ -28,7 +28,7 @@ class RestServer(WifiServer):
 
     def createServer(self):
         logging.info(f"Starting server {self.device}")
-        app.run("0.0.0.0",self.device.port,debug=False)
+        app.run("0.0.0.0",5000,debug=False)
         self.status = -1
 
     def __repr__(self):
@@ -67,7 +67,7 @@ def start():
 
 @socketio.on('disconnect', namespace='/pibox')
 def disconnect():
-    #server.stop()
+    server.stop()
     pass
 
 if __name__ == '__main__':
