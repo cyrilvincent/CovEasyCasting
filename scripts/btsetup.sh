@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo apt-get install -y blueman
 sudo apt-get install -y tio #tio /dev/ttyUSB0 -b 9600
-sudo cp /home/pi/pibox/scripts/config/99-com.rules /etc/udev/rules.d/99-com.rules
+sudo sudo cp /home/pi/pibox/scripts/config/99-com.rules /etc/udev/rules.d/99-com.rules
 
 #https://stackoverflow.com/questions/36675931/bluetooth-btcommon-bluetootherror-2-no-such-file-or-directory
 #https://stackoverflow.com/questions/34599703/rfcomm-bluetooth-permission-denied-error-raspberry-pi
