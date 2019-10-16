@@ -19,12 +19,12 @@ class BTClient(SerialClient):
         super().__init__(prefix, device, cb, timeout)
 
     def connect(self):
+        bluetooth.BluetoothSocket.readline = BTClient.readline1024
         if self.device.id != config.phoneId:
             logging.info(f"Connecting to {self.device}")
             try:
                 if isinstance(self.device.port, str):
                     self.findPort()
-                bluetooth.BluetoothSocket.readline = BTClient.readline1024
                 self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
                 self.sock.connect((self.device.id, self.device.port))
                 logging.info(f"Connected to {self.device}")
