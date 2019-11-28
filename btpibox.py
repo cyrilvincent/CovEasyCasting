@@ -82,8 +82,9 @@ class BTClient(SerialClient):
         while (True):
             data = self.recv(1024).decode()
             s += data
-            if '\r\n' in data or '#*#' in data:
-                s = s.replace("#*#","")
+            if config.output == "keuwl":
+                s = s.replace("#*#", "\r\n")
+            if '\r\n' in data:
                 break;
         return s
 
