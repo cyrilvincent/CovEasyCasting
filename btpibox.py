@@ -82,7 +82,7 @@ class BTClient(SerialClient):
         while (True):
             data = self.recv(1024).decode()
             s += data
-            if '\r\n' in data:
+            if '\r\n' in data or '#*#' in data:
                 break;
         return s
 
