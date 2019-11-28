@@ -69,19 +69,20 @@ class AbstractServer(metaclass=abc.ABCMeta):
 
     def makeJson(self):
         d = {}
-        # d["phone"] = self._getData(self.clients[0])
-        # d["temp"] = self._getData(self.clients[1])
-        # d["pres"] = self._getData(self.clients[2])
-        # d["weight"] = self._getData(self.clients[3])
-        # d["mix"] = self._getData(self.clients[4])
         d["pho"] = int(self._getData(self.getByPrefix("pho")))
         d["tem"] = self._getData(self.getByPrefix("tem"))
         pre = self._getData(self.getByPrefix("pre"))
         d["pre"] = pre/100 if pre > 0 else pre
         d["wei"] = int(self._getData(self.getByPrefix("wei")))
-        # d["mix"] = self.convertIntToBinary(self._getData(self.getByPrefix("mix")))
         d["mix"] = int(self._getData(self.getByPrefix("mix")))
-        return json.dumps(d)
+        if config.output == "json":
+            return json.dumps(d)
+        elif config.output == "keuwl":
+            s=f'*t{d["tem"]}**p{d["pre"]}**w{d["wei"]}**m{d["mix"]}**h{d["pho"]}*'
+            return s
+        else:
+            return f"Bad output {config.output}"
+
 
     def _getData(self,device):
         if device.status < 0:

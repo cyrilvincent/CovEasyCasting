@@ -15,7 +15,7 @@ MAC: 00:0E:EA:CF:58:B8
 #define TxD 7
 
 const int B = 4275;               // B value of the thermistor
-const int R0 = 100000;            // R0 = 100k
+const long R0 = 100000;            // R0 = 100k
 const int pinTempSensor = A0;     // Grove - Temperature Sensor connect to A0
 
 SoftwareSerial blueToothSerial(RxD,TxD);
