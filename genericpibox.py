@@ -78,7 +78,7 @@ class AbstractServer(metaclass=abc.ABCMeta):
         if config.output == "json":
             return json.dumps(d)
         elif config.output == "keuwl":
-            s=f'*t{d["tem"]}**p{d["pre"]}**w{d["wei"]}**m{d["mix"]}**h{d["pho"]}*'
+            s=f'*t{d["tem"]}*p{d["pre"]}*w{d["wei"]}*m{d["mix"]}*h{d["pho"]}*'
             return s
         else:
             return f"Bad output {config.output}"
